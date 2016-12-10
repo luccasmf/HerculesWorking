@@ -1,0 +1,31 @@
+﻿@model ControleDocumentosLibrary.SolicitacaoDocumento
+@{ 
+    var acao = Model.Status == ControleDocumentosLibrary.EnumStatusSolicitacao.cancelado ? "Cancelamento" :
+        Model.Status == ControleDocumentosLibrary.EnumStatusSolicitacao.pendente ? "Reprovação" :
+        Model.Status == ControleDocumentosLibrary.EnumStatusSolicitacao.concluido ? "Aprovação" : "";
+
+    var acaoVerbo = Model.Status == ControleDocumentosLibrary.EnumStatusSolicitacao.cancelado ? "cancelar" :
+        Model.Status == ControleDocumentosLibrary.EnumStatusSolicitacao.pendente ? "reprovar" :
+        Model.Status == ControleDocumentosLibrary.EnumStatusSolicitacao.concluido ? "aprovar" : "";
+}
+
+<div class="modal-content">
+    <div class="modal-header">
+        <button type="button" class="close" data-dismiss="modal" aria-hidden="true">×</button>
+        <h4 class="modal-title">@(acao +" de solicitação")</h4>
+    </div>
+@using (Html.BeginForm("AlterarStatus", "SolicitacaoDocumento", FormMethod.Post, new { @class= "frm-submit-modal" }))
+{
+    @Html.HiddenFor(x => x.IdSolicitacao)
+    @Html.HiddenFor(x => x.Status)
+    <div class="modal-body">
+        <div class="form-group">
+            @Html.Raw(string.Format("Tem certeza que deseja {0} esta solicitação?",acaoVerbo))
+        </div>
+    </div>
+    <div class="modal-footer">
+        <button type="button" class="btn btn-default" data-dismiss="modal">Cancelar</button>
+        <button type="submit" class="btn btn-primary">Ok</button>
+    </div>
+}
+</div>

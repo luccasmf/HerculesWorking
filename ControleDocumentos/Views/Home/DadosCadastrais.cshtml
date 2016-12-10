@@ -1,0 +1,44 @@
+﻿@using ControleDocumentos.Util
+@model ControleDocumentosLibrary.Usuario
+@{ControleDocumentos.Repository.UsuarioRepository ur = new ControleDocumentos.Repository.UsuarioRepository();}
+@{ControleDocumentosLibrary.Usuario user = ur.GetUsuarioById(User.Identity.Name);}
+@{
+    ViewBag.Title = "Dados Cadastrais";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+@Scripts.Render("~/Scripts/PageScripts/Home.js")
+<h1>Dados cadastrais</h1>
+<br />
+
+@using (Html.BeginForm("SalvarDadosCadastrais", "Home", FormMethod.Post, new { @class = "frm-submit-redirect" }))
+{
+    <div class="modal-body">
+        @Html.HiddenFor(x => x.IdUsuario)
+        <div class="form-group row">
+            <div class="col-md-6">
+                @Html.Label("Nome*")
+                @Html.TextBoxFor(x => x.Nome, new { @class = "form-control", @maxlength = 50, @required = "required", @disabled = true })
+            </div>
+        </div>
+        <div class="form-group row">
+            <div class="col-md-6">
+                @Html.Label("E-mail*")
+                @Html.TextBoxFor(x => x.E_mail, new { @class = "form-control", @maxlength = 50, @required = "required", @type="email" })
+            </div>
+        </div>
+        @if (user.Permissao == ControleDocumentosLibrary.EnumPermissaoUsuario.aluno)
+        {
+            <div class="form-group row">
+                <div class="col-md-6">
+                    @Html.Label("Curso*")
+                    @Html.DropDownList("IdCurso", (SelectList)ViewBag.Cursos, string.Empty, new { @class = "form-control", @required = "required" })
+
+                </div>
+            </div>
+        }
+
+    </div>
+    <div class="modal-footer">
+        <button type="submit" class="btn btn-primary">Salvar</button>
+    </div>
+}

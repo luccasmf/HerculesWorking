@@ -1,0 +1,21 @@
+﻿@model ControleDocumentos.Models.SolicitacaoDocumentoEmail
+<!DOCTYPE html>
+<html lang="en" xmlns="http://www.w3.org/1999/xhtml">
+<head>
+    <meta charset="utf-8" />
+    <title></title>
+</head>
+<body>
+    <table style="font-family: 'Tahoma', sans-serif; font-size: 12pt; width: 652px; color: #048FC6">
+        <tr style="height: 50px; vertical-align: top; font-size: 18pt;">
+            <td colspan="2">
+                @{ var acao = Model.Status == ControleDocumentosLibrary.EnumStatusSolicitacao.concluido ? "aprovada" :
+                          Model.Status == ControleDocumentosLibrary.EnumStatusSolicitacao.reprovado ? "reprovada" : "";}
+
+                Você teve uma solicitação de horas complementares @acao
+            </td>
+        </tr>
+        <tr><td colspan="2" style="padding-top: 20px;"><span style="color: #444444">Para mais detalhes, acesse o sistema no link <a href="@Model.UrlSistema">@Model.UrlSistema</a></span></td></tr>
+    </table>
+</body>
+</html>

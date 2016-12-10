@@ -1,0 +1,20 @@
+﻿@model List<ControleDocumentosLibrary.Curso>
+@{
+    ViewBag.Title = "Cursos";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+@Scripts.Render("~/Scripts/PageScripts/Curso.js")
+
+<h1>Cursos</h1>
+<br/>
+<div class="text-right">
+    <button class="btn btn-primary btnCadastro" id="btnCadastro" url="@Url.Action("CarregaModalCadastro","Curso")">Novo curso</button>
+</div>
+
+<div class="row">
+    <div class="box">
+        <div class="box-content partialList">
+            @Html.Partial("_List", Model)
+        </div>
+    </div>
+</div>

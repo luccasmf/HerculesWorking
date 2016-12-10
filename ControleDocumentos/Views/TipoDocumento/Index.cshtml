@@ -1,0 +1,20 @@
+﻿@model List<ControleDocumentosLibrary.TipoDocumento>
+@{
+    ViewBag.Title = "Tipos de documento";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+@Scripts.Render("~/Scripts/PageScripts/TipoDocumento.js")
+
+<h1>Tipos de documento</h1>
+<br/>
+<div class="text-right">
+    <button class="btn btn-primary btnCadastro" id="btnCadastro" url="@Url.Action("CarregaModalCadastro","TipoDocumento")">Novo tipo</button>
+</div>
+
+<div class="row">
+    <div class="box">
+        <div class="box-content partialList">
+            @Html.Partial("_List", Model)
+        </div>
+    </div>
+</div>

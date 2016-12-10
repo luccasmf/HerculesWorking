@@ -1,0 +1,22 @@
+﻿@model ControleDocumentosLibrary.Evento
+
+<div class="modal-content">
+    <div class="modal-header">
+        <button type="button" class="close" data-dismiss="modal" aria-hidden="true">×</button>
+        <h4 class="modal-title">Cancelamento de evento</h4>
+    </div>
+@using (Html.BeginForm("AlterarStatus", "Evento", FormMethod.Post, new { @class= "frm-submit-modal" }))
+{
+    @Html.HiddenFor(x => x.IdEvento)
+    @Html.HiddenFor(x => x.Status)
+    <div class="modal-body">
+        <div class="form-group">
+            @Html.Raw(string.Format("Tem certeza que deseja cancelar o evento {0}?", Model.NomeEvento))
+        </div>
+    </div>
+    <div class="modal-footer">
+        <button type="button" class="btn btn-default" data-dismiss="modal">Cancelar</button>
+        <button type="submit" class="btn btn-primary">Ok</button>
+    </div>
+}
+</div>

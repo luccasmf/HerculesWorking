@@ -1,0 +1,53 @@
+﻿@model List<ControleDocumentosLibrary.SolicitacaoDocumento>
+@{
+    ViewBag.Title = "Horas complementares";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+@Scripts.Render("~/Scripts/PageScripts/HoraComplementar.js")
+
+<div class="divList">
+    <h1>Horas complementares</h1>
+    <br />
+
+    <div class="form-group box-content">
+        <i style="color:orangered" class="icon-action fa fa-exclamation-circle"></i> <b>@string.Format("Você possui {0} horas complementares de {1} necessárias!", ViewBag.HrsComputadas, ViewBag.HrsNecessarias)</b>
+    </div>
+
+    <form action="@Url.Action("List", "HoraComplementar")" method="get" class="form-filter">
+        <div class="box">
+            <div class="box-header">
+                <h2>Filtro</h2>
+                <div class="box-icon">
+                    <a class="btn-minimize"><i class="fa fa-chevron-up"></i></a>
+                </div>
+            </div>
+            <div class="box-content">
+                <div class="form-group row">
+                    <div class="col-md-6">
+                        @Html.Label("Status")
+                        @Html.DropDownList("IdStatus", (SelectList)ViewBag.Status ,string.Empty, new { @class = "form-control" })
+                    </div>
+                </div>
+
+            </div>
+        </div>
+
+        <div class="text-right">
+            <a type="button" class="btn btn-default btnCadastro" id="btnCadastro" url="@Url.Action("CadastrarSolicitacao","HoraComplementar")" href="#">Solicitar horas complementares</a>
+            <button type="submit" class="btn btn-primary btnPesquisar" id="btnPesquisar">Pesquisar</button>
+        </div>
+    </form>
+
+    <div class="row">
+        <div class="box">
+            <div class="box-content partialList">
+                @Html.Partial("_List", Model)
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="divFormSave" style="display:none">
+    <div class="formSave">
+    </div>
+</div>

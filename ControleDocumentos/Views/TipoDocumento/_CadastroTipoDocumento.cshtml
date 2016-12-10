@@ -1,0 +1,22 @@
+﻿@model ControleDocumentosLibrary.TipoDocumento
+
+<div class="modal-content">
+    <div class="modal-header">
+        <button type="button" class="close" data-dismiss="modal" aria-hidden="true">×</button>
+        <h4 class="modal-title">Cadastro de tipo de documento</h4>
+    </div>
+    @using (Html.BeginForm("SalvarTipoDocumento", "TipoDocumento", FormMethod.Post, new { @class = "frm-submit-modal" }))
+    {
+        <div class="modal-body">
+            @Html.HiddenFor(x => x.IdTipoDoc)
+            <div class="form-group">
+                @Html.Label("Nome*")
+                @Html.TextBoxFor(x => x.TipoDocumento1, new { @class = "form-control", @maxlength = 50, @required = "required" })
+            </div>
+        </div>
+        <div class="modal-footer">
+            <button type="button" class="btn btn-default" data-dismiss="modal">Voltar</button>
+            <button type="submit" class="btn btn-primary">Salvar</button>
+        </div>
+    }
+</div>

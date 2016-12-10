@@ -1,0 +1,44 @@
+﻿@model ControleDocumentos.Models.ChamadaModel
+
+<h1>@(string.Format("Chamada para o evento {0}", Model.NomeEvento))</h1>
+<br />
+
+@using (Html.BeginForm("FazerChamada", "Evento", FormMethod.Post, new { @class = "frm-submit-chamada" }))
+{
+    @Html.Hidden("idEvento", Model.IdEvento)
+
+    <div class="form-group">
+        @foreach (var curso in Model.Alunos.GroupBy(x => x.AlunoCurso.FirstOrDefault().Curso.Nome))
+        {
+            <h2><b>@curso.Key</b></h2>
+            <table class="table table-striped table-bordered">
+                <thead>
+                    <tr>
+                        <th>Nome do aluno</th>
+                        <th>Presente?</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    @foreach (var aluno in curso)
+                    {
+                        <tr>
+                            <td>@aluno.Usuario.Nome</td>
+                            <td>
+                                <input type="checkbox" name="idAlunos" value="@aluno.IdAluno" @(Model.Presentes != null && Model.Presentes.Any(x => x.IdAluno == aluno.IdAluno) ? "checked" : "")>
+                            </td>
+                        </tr>
+                    }
+                </tbody>
+            </table>
+            <br/>
+            <hr />
+        }
+    </div>
+
+
+    <div class="text-right form-group">
+        <a type="button" class="btn btn-default btnCancelarChamada" url="@Url.Action("Index", "Evento")">Voltar</a>
+        <button type="submit" class="btn btn-primary">Finalizar chamada</button>
+    </div>
+}
+

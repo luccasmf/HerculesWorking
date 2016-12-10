@@ -1,0 +1,34 @@
+﻿@model List<ControleDocumentosLibrary.SolicitacaoDocumento>
+<table class="table table-striped table-bordered commmon-datatable">
+    <thead>
+        <tr>
+            <th>Nome do aluno</th>
+            <th>Curso</th>
+            <th>Tipo de documento</th>
+            <th>Status</th>
+            <th>Ações</th>
+        </tr>
+    </thead>
+    <tbody>
+        @foreach (var sol in Model)
+            {
+            <tr>
+                <td>@(sol.AlunoCurso != null && sol.AlunoCurso.Aluno != null && sol.AlunoCurso.Aluno.Usuario != null ? sol.AlunoCurso.Aluno.Usuario.Nome : "")</td>
+                <td>@(sol.AlunoCurso != null && sol.AlunoCurso.Curso != null ? sol.AlunoCurso.Curso.Nome : "")</td>
+                <td>@(sol.Documento != null && sol.Documento.TipoDocumento != null ? sol.Documento.TipoDocumento.TipoDocumento1 : "")</td>
+                <td>@(ControleDocumentos.Util.Extension.EnumExtensions.GetEnumDescription(sol.Status))</td>
+                <td class="center">
+                    <a class="btnCadastro" data-rel="tooltip" title="@(sol.Status == ControleDocumentosLibrary.EnumStatusSolicitacao.cancelado || sol.Status == ControleDocumentosLibrary.EnumStatusSolicitacao.concluido ? "Visualizar" : "Editar")" href="#" url="@Url.Action("CadastrarSolicitacao","SolicitacaoDocumento", new { idSol = sol.IdSolicitacao })">
+                        <i class="icon-action @(sol.Status == ControleDocumentosLibrary.EnumStatusSolicitacao.cancelado || sol.Status == ControleDocumentosLibrary.EnumStatusSolicitacao.concluido ? "fa fa-eye" : "fa fa-edit")"></i>
+                    </a>
+                    @if (sol.Status == ControleDocumentosLibrary.EnumStatusSolicitacao.pendente)
+                    {
+                        <a class="btnConfirm" data-rel="tooltip" title="Excluir" url="@Url.Action("CarregaModalExclusao","SolicitacaoDocumento", new { idSol = sol.IdSolicitacao })" href="#">
+                            <i class="icon-action fa fa-trash-o"></i>
+                        </a>
+                    }
+                </td>
+            </tr>
+        }
+    </tbody>
+</table>

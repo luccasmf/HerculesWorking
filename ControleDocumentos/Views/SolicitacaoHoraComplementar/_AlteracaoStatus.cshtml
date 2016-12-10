@@ -1,0 +1,39 @@
+﻿@model ControleDocumentosLibrary.SolicitacaoDocumento
+@{
+    var acao = Model.Status == ControleDocumentosLibrary.EnumStatusSolicitacao.reprovado ? "Reprovação" :
+        Model.Status == ControleDocumentosLibrary.EnumStatusSolicitacao.concluido ? "Aprovação" : "";
+}
+
+<div class="modal-content">
+    <div class="modal-header">
+        <button type="button" class="close" data-dismiss="modal" aria-hidden="true">×</button>
+        <h4 class="modal-title">@(acao + " de solicitação de horas complementares")</h4>
+    </div>
+    @using (Html.BeginForm("AlterarStatus", "SolicitacaoHoraComplementar", FormMethod.Post, new { @class = "frm-submit-modal" }))
+    {
+        @Html.HiddenFor(x => x.IdSolicitacao)
+        @Html.HiddenFor(x => x.Status)
+        <div class="modal-body">
+            <div class="form-group row">
+                @if (Model.Status == ControleDocumentosLibrary.EnumStatusSolicitacao.concluido)
+                {
+                    <div class="col-md-6">
+                        <label>Quantidade de Horas*</label>
+                        @Html.TextBox("Horas", string.Empty, new { @class = "form-control", @type = "number", @required = true, @maxlength = "3" })
+                    </div>
+                }
+                else
+                {
+                    <div class="col-md-12">
+                        <label> Observações*</label>
+                        @Html.TextArea("Observacao", string.Empty, new { @style = "resize: none;", @class = "form-control", @rows = 10, @required = true, @maxlength = "500" })
+                    </div>
+                }
+            </div>
+        </div>
+        <div class="modal-footer">
+            <button type="button" class="btn btn-default" data-dismiss="modal">Cancelar</button>
+            <button type="submit" class="btn btn-primary">Ok</button>
+        </div>
+    }
+</div>

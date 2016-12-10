@@ -1,0 +1,71 @@
+﻿@model List<ControleDocumentosLibrary.Documento>
+@{ControleDocumentos.Repository.UsuarioRepository ur = new ControleDocumentos.Repository.UsuarioRepository();}
+@{ControleDocumentosLibrary.Usuario user = ur.GetUsuarioById(User.Identity.Name);}
+@{
+    ViewBag.Title = "Documentos de alunos";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+@Scripts.Render("~/Scripts/PageScripts/Documento.js")
+
+<div class="divList">
+    <h1>Documentos de alunos</h1>
+    <br />
+    @*
+        <div class="box">
+            <div class="box-header">
+                <h2>Filtro</h2>
+                <div class="box-icon">
+                    <a class="btn-minimize"><i class="fa fa-chevron-up"></i></a>
+                </div>
+            </div>
+            <div class="box-content">
+                <form action="@Url.Action("List", "Documento")" method="get" class="form-filter">
+                    <div class="form-group row">
+                        <div class="col-md-10">
+                            @Html.Label("Nome do aluno")
+                            @Html.TextBox("NomeAluno", string.Empty, new { @class = "form-control" })
+                        </div>
+                    </div>
+                    <div class="form-group row">
+                        <div class="col-md-6">
+                            @Html.Label("Curso")
+                            @Html.DropDownList("IdCurso", (SelectList)ViewBag.Cursos, string.Empty, new { @class = "form-control" })
+                        </div>
+                    </div>
+                    <div class="form-group row">
+                        <div class="col-md-6">
+                            @Html.Label("Tipo de documento")
+                            @Html.DropDownList("IdTipoDocumento", (SelectList)ViewBag.TiposDoc, string.Empty, new { @class = "form-control" })
+                        </div>
+                    </div>
+
+
+                    <div class="text-right">
+                        <button class="btn btn-default btnCadastro" id="btnCadastro" url="@Url.Action("CarregaModalCadastro","TipoDocumento")">Cadastrar novo</button>
+                        <button type="submit" class="btn btn-primary btnPesquisar" id="btnPesquisar">Pesquisar</button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    *@
+
+    @if (user.Permissao != ControleDocumentosLibrary.EnumPermissaoUsuario.aluno)
+    {
+        <div class="text-right">
+            <a type="button" class="btn btn-primary btnCadastro" id="btnCadastro" url="@Url.Action("CadastrarDocumento", "Documento")" href="#">Novo documento</a>
+        </div>
+    }
+
+    <div class="row">
+        <div class="box">
+            <div class="box-content partialList">
+                @Html.Partial("_List", Model)
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="divFormSave" style="display:none">
+    <div class="formSave">
+    </div>
+</div>

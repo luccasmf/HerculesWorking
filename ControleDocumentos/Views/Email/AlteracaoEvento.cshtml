@@ -1,0 +1,67 @@
+﻿@model ControleDocumentos.Models.EventoEmail
+<!DOCTYPE html>
+<html lang="en" xmlns="http://www.w3.org/1999/xhtml">
+<head>
+    <meta charset="utf-8" />
+    <title></title>
+</head>
+<body>
+    <table style="font-family: 'Tahoma', sans-serif; font-size: 12pt; width: 652px; color: #048FC6">
+        <tr style="height: 50px; vertical-align: top; font-size: 18pt;">
+            <td colspan="2">
+                Houve uma alteração no evento no qual você está inscrito, @Model.NomeEvento
+            </td>
+        </tr>
+        <tr><td colspan="2" height="20px"></td></tr>
+        <tr>
+            <td style="width: 15%">
+                <span style="color: #888888">Local: </span>
+            </td>
+            <td style="width: 15%">
+                <span style="color: #444444">@Model.Local</span>
+            </td>
+        </tr>
+        <tr>
+            <td style="width: 15%">
+                <span style="color: #888888">Data/Hora de início:</span>
+            </td>
+            <td style="width: 15%">
+                <span style="color: #444444">@Model.DataInicio</span>
+            </td>
+        </tr>
+        <tr>
+            <td style="width: 15%">
+                <span style="color: #888888">Data/Hora de fim:</span>
+            </td>
+            <td style="width: 15%">
+                <span style="color: #444444">@Model.DataFim</span>
+            </td>
+        </tr>
+        <tr>
+            <td style="width: 15%">
+                <span style="color: #888888">Carga horária:</span>
+            </td>
+            <td style="width: 15%">
+                <span style="color: #444444">@Model.CargaHoraria</span>
+            </td>
+        </tr>
+        <tr>
+            <td style="width: 15%">
+                <span style="color: #888888">Vagas:</span>
+            </td>
+            <td style="width: 15%">
+                <span style="color: #444444">@Model.Vagas</span>
+            </td>
+        </tr>
+        <tr>
+            <td style="width: 15%">
+                <span style="color: #888888">Observações:</span>
+            </td>
+            <td style="width: 15%">
+                <span style="color: #444444">@Model.Observacao</span>
+            </td>
+        </tr>
+        <tr><td colspan="2" style="padding-top: 20px;"><span style="color: #444444">Você pode acessar o sistema no link <a href="@Model.UrlSistema">@Model.UrlSistema</a></span></td></tr>
+    </table>
+</body>
+</html>

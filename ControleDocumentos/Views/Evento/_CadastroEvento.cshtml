@@ -1,0 +1,199 @@
+﻿@model ControleDocumentosLibrary.Evento
+@{ControleDocumentos.Repository.UsuarioRepository ur = new ControleDocumentos.Repository.UsuarioRepository();}
+@{ControleDocumentosLibrary.Usuario user = ur.GetUsuarioById(User.Identity.Name);}
+<h1>Cadastro de evento</h1>
+<br />
+
+@using (Html.BeginForm("SalvaEvento", "Evento", FormMethod.Post, new { @class = "frm-submit" }))
+{
+    //Model.Status = Model.DataFim != DateTime.MinValue && DateTime.Now > Model.DataFim ? ControleDocumentosLibrary.EnumStatusEvento.concluido : Model.Status;
+
+    @Html.HiddenFor(x => x.IdEvento)
+    @Html.HiddenFor(x => x.Status)
+
+    <div class="form-group row">
+        <div class="col-md-10 form-group">
+            @Html.Label("Nome do evento*")
+            @if (Model.Status == ControleDocumentosLibrary.EnumStatusEvento.cancelado ||
+                Model.Status == ControleDocumentosLibrary.EnumStatusEvento.concluido ||
+                Model.Status == ControleDocumentosLibrary.EnumStatusEvento.certificados ||
+                user.Permissao == ControleDocumentosLibrary.EnumPermissaoUsuario.aluno)
+            {
+                @Html.TextBoxFor(x => x.NomeEvento, new { @class = "form-control", @disabled = true })
+            }
+            else
+            {
+                @Html.TextBoxFor(x => x.NomeEvento, new { @class = "form-control", @required = true, @maxlength = 30 })
+            }
+        </div>
+    </div>
+
+    <div class="row form-group">
+        <div class="col-md-10">
+            @Html.Label("Local do evento*")
+            @if (Model.Status == ControleDocumentosLibrary.EnumStatusEvento.cancelado ||
+                Model.Status == ControleDocumentosLibrary.EnumStatusEvento.certificados ||
+                Model.Status == ControleDocumentosLibrary.EnumStatusEvento.concluido ||
+                user.Permissao == ControleDocumentosLibrary.EnumPermissaoUsuario.aluno)
+            {
+                @Html.TextBoxFor(x => x.Local, new { @class = "form-control", @disabled = true })
+            }
+            else
+            {
+                @Html.TextBoxFor(x => x.Local, new { @class = "form-control", @required = true, @maxlength = 50 })
+            }
+        </div>
+    </div>
+
+    <div class="form-group row">
+        <div class="col-md-10">
+            @Html.Label("Cursos*")
+            <div class="controls">
+                @if (Model.Status == ControleDocumentosLibrary.EnumStatusEvento.cancelado ||
+                Model.Status == ControleDocumentosLibrary.EnumStatusEvento.certificados ||
+                    Model.Status == ControleDocumentosLibrary.EnumStatusEvento.concluido ||
+                    user.Permissao == ControleDocumentosLibrary.EnumPermissaoUsuario.aluno)
+                {
+                    @Html.ListBoxFor(x => x.SelectedCursos, (SelectList)ViewBag.Cursos, new { @class = "form-control", @disabled = true, @multiple = true, data_rel = "chosen" })
+                }
+                else
+                {
+                    @Html.ListBoxFor(x => x.SelectedCursos, (SelectList)ViewBag.Cursos, new { @class = "form-control", @multiple = true, data_rel = "chosen" })
+                }
+            </div>
+        </div>
+    </div>
+
+    <div class="form-group row">
+        <div class="col-md-4">
+            @Html.Label("Data/hora de início*")
+            @if (Model.Status == ControleDocumentosLibrary.EnumStatusEvento.cancelado ||
+                Model.Status == ControleDocumentosLibrary.EnumStatusEvento.certificados ||
+                Model.Status == ControleDocumentosLibrary.EnumStatusEvento.concluido ||
+                user.Permissao == ControleDocumentosLibrary.EnumPermissaoUsuario.aluno ||
+                user.Permissao == ControleDocumentosLibrary.EnumPermissaoUsuario.professor)
+            {
+                @Html.TextBoxFor(x => x.DataInicio, new { @class = "form-control datetimepicker", @disabled = true, @Value = Model.DataInicio == DateTime.MinValue ? "" : Model.DataInicio.ToString() })
+            }
+            else
+            {
+                @Html.TextBoxFor(x => x.DataInicio, new { @class = "form-control datetimepicker", @required = true, @Value = Model.DataInicio == DateTime.MinValue ? "" : Model.DataInicio.ToString() })
+            }
+        </div>
+        <div class="col-md-4">
+            @Html.Label("Data/hora de fim*")
+            @if (Model.Status == ControleDocumentosLibrary.EnumStatusEvento.cancelado ||
+                Model.Status == ControleDocumentosLibrary.EnumStatusEvento.certificados ||
+                Model.Status == ControleDocumentosLibrary.EnumStatusEvento.concluido ||
+                user.Permissao == ControleDocumentosLibrary.EnumPermissaoUsuario.aluno ||
+                user.Permissao == ControleDocumentosLibrary.EnumPermissaoUsuario.professor)
+            {
+                @Html.TextBoxFor(x => x.DataFim, new { @class = "form-control datetimepicker", @disabled = true, @Value = Model.DataFim == DateTime.MinValue ? "" : Model.DataFim.ToString() })
+            }
+            else
+            {
+                @Html.TextBoxFor(x => x.DataFim, new { @class = "form-control datetimepicker", @required = true, @Value = Model.DataFim == DateTime.MinValue ? "" : Model.DataFim.ToString() })
+            }
+        </div>
+        <div class="col-md-2">
+            @Html.Label("Qtde hrs*")
+            @if (Model.Status == ControleDocumentosLibrary.EnumStatusEvento.cancelado ||
+                Model.Status == ControleDocumentosLibrary.EnumStatusEvento.certificados ||
+                Model.Status == ControleDocumentosLibrary.EnumStatusEvento.concluido ||
+                user.Permissao == ControleDocumentosLibrary.EnumPermissaoUsuario.aluno ||
+                user.Permissao == ControleDocumentosLibrary.EnumPermissaoUsuario.professor)
+            {
+                @Html.TextBoxFor(x => x.CargaHoraria, new { @type = "number", @class = "form-control", @disabled = true, maxlength = 3 })
+            }
+            else
+            {
+                @Html.TextBoxFor(x => x.CargaHoraria, new { @type = "number", @class = "form-control", @required = true, maxlength = 3 })
+            }
+        </div>
+    </div>
+
+    <div class="form-group row">
+        <div class="col-md-2">
+            @Html.Label("Qtde vagas*")
+            @if (Model.Status == ControleDocumentosLibrary.EnumStatusEvento.cancelado ||
+                Model.Status == ControleDocumentosLibrary.EnumStatusEvento.certificados ||
+                Model.Status == ControleDocumentosLibrary.EnumStatusEvento.concluido ||
+                user.Permissao == ControleDocumentosLibrary.EnumPermissaoUsuario.aluno ||
+                user.Permissao == ControleDocumentosLibrary.EnumPermissaoUsuario.professor)
+            {
+                @Html.TextBoxFor(x => x.Vagas, new { @type = "number", @class = "form-control", @disabled = true, maxlength = 3 })
+            }
+            else
+            {
+                @Html.TextBoxFor(x => x.Vagas, new { @type = "number", @class = "form-control", @required = true, maxlength = 3 })
+            }
+        </div>
+        <div class="col-md-2">
+            @if (Model.IdEvento > 0)
+            {
+                @Html.Label("Vagas Preenchidas")
+                @Html.TextBoxFor(x => x.VagasPreenchidas, new { @type = "number", @class = "form-control", @disabled = true, maxlength = 3 })
+            }
+        </div>
+        <div class="col-md-4">
+            @Html.Label("Qtde presenças necessárias*")
+            @if (Model.Status == ControleDocumentosLibrary.EnumStatusEvento.cancelado ||
+                Model.Status == ControleDocumentosLibrary.EnumStatusEvento.certificados ||
+                Model.Status == ControleDocumentosLibrary.EnumStatusEvento.concluido ||
+                user.Permissao == ControleDocumentosLibrary.EnumPermissaoUsuario.aluno ||
+                user.Permissao == ControleDocumentosLibrary.EnumPermissaoUsuario.professor)
+            {
+                @Html.TextBoxFor(x => x.PresencaNecessaria, new { @type = "number", @class = "form-control", @disabled = true, maxlength = 3 })
+            }
+            else
+            {
+                @Html.TextBoxFor(x => x.PresencaNecessaria, new { @type = "number", @class = "form-control", @required = true, maxlength = 3 })
+            }
+        </div>
+    </div>
+
+    <div class="form-group row">
+        <div class="col-md-10">
+            @Html.Label("Observações")
+            @if (Model.Status == ControleDocumentosLibrary.EnumStatusEvento.cancelado ||
+                Model.Status == ControleDocumentosLibrary.EnumStatusEvento.certificados ||
+                Model.Status == ControleDocumentosLibrary.EnumStatusEvento.concluido ||
+                user.Permissao == ControleDocumentosLibrary.EnumPermissaoUsuario.aluno ||
+                user.Permissao == ControleDocumentosLibrary.EnumPermissaoUsuario.professor)
+            {
+                @Html.TextAreaFor(x => x.Observacao, new { @style = "resize: none;", @class = "form-control", @rows = 10, @disabled = true })
+            }
+            else
+            {
+                @Html.TextAreaFor(x => x.Observacao, new { @style = "resize: none;", @class = "form-control", @rows = 10 })
+            }
+        </div>
+    </div>
+
+    <div class="text-right form-group">
+        <a type="button" class="btn btn-default btnCancelar" url="@Url.Action("Index", "Evento")">Voltar</a>
+        @if (user.Permissao != ControleDocumentosLibrary.EnumPermissaoUsuario.aluno )
+        {
+            if (Model.IdEvento > 0 && Model.Status != ControleDocumentosLibrary.EnumStatusEvento.cancelado &&
+                Model.Status != ControleDocumentosLibrary.EnumStatusEvento.concluido &&
+                Model.Status != ControleDocumentosLibrary.EnumStatusEvento.certificados &&
+            user.Permissao != ControleDocumentosLibrary.EnumPermissaoUsuario.professor)
+            {
+                <a type="button" class="btn btn-danger btnConfirm" url="@Url.Action("CarregaModalConfirmacao", "Evento", new { novoStatus = ControleDocumentosLibrary.EnumStatusSolicitacao.cancelado, idEvento = Model.IdEvento })">Cancelar evento</a>
+            }
+            if (Model.Status != ControleDocumentosLibrary.EnumStatusEvento.cancelado &&
+                Model.Status != ControleDocumentosLibrary.EnumStatusEvento.certificados &&
+                Model.Status != ControleDocumentosLibrary.EnumStatusEvento.concluido &&
+            user.Permissao != ControleDocumentosLibrary.EnumPermissaoUsuario.professor)
+            {
+                <button type="submit" class="btn btn-primary">Salvar</button>
+            }
+            if (Model.Status == ControleDocumentosLibrary.EnumStatusEvento.concluido &&
+                user.Permissao != ControleDocumentosLibrary.EnumPermissaoUsuario.professor)
+            {
+                <a type="button" class="btn btn-success btnGerarCertificados" url="@Url.Action("GeraCertificados", "Evento", new { idEvento = Model.IdEvento })">Gerar Certificados</a>
+            }
+        }
+    </div>
+}
+

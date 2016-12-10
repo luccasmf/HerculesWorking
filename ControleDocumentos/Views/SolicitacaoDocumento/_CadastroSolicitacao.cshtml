@@ -1,0 +1,105 @@
+﻿@model ControleDocumentosLibrary.SolicitacaoDocumento
+
+<h1>Cadastro de solicitação de documento</h1>
+<br />
+
+@if (Model.Documento != null && !string.IsNullOrEmpty(Model.Documento.CaminhoDocumento))
+{
+    var data = Model.DataAtendimento.HasValue ? Model.DataAtendimento.Value.ToShortDateString() : "";
+    var hora = Model.DataAtendimento.HasValue ? Model.DataAtendimento.Value.ToShortTimeString() : "";
+    <div class="form-group box-content">
+        <i>Solicitação atendida em @data às @hora</i>
+        <br />
+        <i>Documento: </i>&nbsp;<a href="@Url.Action("Download", "Documento", new { nomeDoc = Model.Documento.NomeDocumento })">@Model.Documento.NomeDocumento</a>
+    </div>
+}
+@using (Html.BeginForm("SalvarSolicitacao", "SolicitacaoDocumento", FormMethod.Post, new { @class = "frm-submit" }))
+{
+    @Html.HiddenFor(x => x.IdSolicitacao)
+    <div class="form-group row">
+        <div class="col-md-6">
+            @Html.Label("Tipo de documento*")
+            @if (Model.IdSolicitacao > 0)
+                {
+                @Html.DropDownListFor(x => x.TipoDocumento, (SelectList)ViewBag.TiposDocumento, "Selecione", new { @id = "ddlTipoDoc", @class = "form-control", @disabled = true })
+            }
+            else if (Model.Status != ControleDocumentosLibrary.EnumStatusSolicitacao.cancelado)
+            {
+                @Html.DropDownListFor(x => x.TipoDocumento, (SelectList)ViewBag.TiposDocumento, "Selecione", new { @id = "ddlTipoDoc", @class = "form-control", @required = "required" })
+            }
+        </div>
+        <div class="col-md-3">
+            @Html.Label("Prazo*")
+            @if (Model.Status == ControleDocumentosLibrary.EnumStatusSolicitacao.cancelado)
+                {
+                @Html.TextBoxFor(x => x.DataLimite, new { @id = "txtPrazo", @class = "form-control datepicker", @required = "required", @disabled = true, @Value = Model.DataLimite == DateTime.MinValue ? DateTime.Now.AddDays(7).ToShortDateString() : Model.DataLimite.ToShortDateString() })
+            }
+            else
+            {
+                @Html.TextBoxFor(x => x.DataLimite, new { @id = "txtPrazo", @class = "form-control datepicker", @required = "required", @Value = Model.DataLimite == DateTime.MinValue ? DateTime.Now.AddDays(7).ToShortDateString() : Model.DataLimite.ToShortDateString() })
+            }
+        </div>
+    </div>
+
+    <div class="form-group row">
+        <div class="col-md-6">
+            @Html.Label("Curso*")
+            @if (Model.IdSolicitacao > 0)
+                {
+                @Html.DropDownListFor(x => x.AlunoCurso.IdCurso, (SelectList)ViewBag.Cursos, "Selecione", new { @id = "ddlCurso", @class = "form-control", @disabled = true })
+            }
+            else if (Model.Status != ControleDocumentosLibrary.EnumStatusSolicitacao.cancelado)
+            {
+                @Html.DropDownListFor(x => x.AlunoCurso.IdCurso, (SelectList)ViewBag.Cursos, "Selecione", new { @id = "ddlCurso", @class = "form-control", @required = "required", @url = Url.Action("GetAlunosByIdCurso", "SolicitacaoDocumento") })
+            }
+        </div>
+    </div>
+
+    <div class="form-group row">
+        <div class="col-md-6">
+            @Html.Label("Aluno*")
+            @if (Model.IdSolicitacao > 0)
+                {
+                @Html.DropDownListFor(x => x.AlunoCurso.IdAluno, (SelectList)ViewBag.Alunos, "Selecione", new { @id = "ddlAluno", @class = "form-control", @disabled = true })
+            }
+            else if (Model.Status != ControleDocumentosLibrary.EnumStatusSolicitacao.cancelado)
+            {
+                @Html.DropDownListFor(x => x.AlunoCurso.IdAluno, (SelectList)ViewBag.Alunos, "Selecione", new { @id = "ddlAluno", @class = "form-control", @required = "required" })
+            }
+        </div>
+    </div>
+
+    <div class="form-group row">
+        <div class="col-md-9">
+            @Html.Label("Observações")
+            @if (Model.Status == ControleDocumentosLibrary.EnumStatusSolicitacao.cancelado)
+                {
+                @Html.TextAreaFor(x => x.Observacao, new { @style = "resize: none;", @class = "form-control", @rows = 10, @disabled = true })
+            }
+            else
+            {
+                @Html.TextAreaFor(x => x.Observacao, new { @style = "resize: none;", @class = "form-control", @rows = 10,@maxlength="500" })
+            }
+        </div>
+    </div>
+
+        <div class="text-right form-group">
+            <a type="button" class="btn btn-default btnCancelar" url="@Url.Action("Index", "SolicitacaoDocumento")">Voltar</a>
+            @if (Model.IdSolicitacao > 0 && Model.Status != ControleDocumentosLibrary.EnumStatusSolicitacao.cancelado &&
+                Model.Status != ControleDocumentosLibrary.EnumStatusSolicitacao.concluido)
+            {
+                <a type="button" class="btn btn-danger btnConfirm" url="@Url.Action("CarregaModalConfirmacao", "SolicitacaoDocumento", new { novoStatus = ControleDocumentosLibrary.EnumStatusSolicitacao.cancelado, idSol = Model.IdSolicitacao })">Cancelar solicitação</a>
+            }
+            @if (Model.Status == ControleDocumentosLibrary.EnumStatusSolicitacao.processando)
+            {
+                <a type="button" class="btn btn-danger btnConfirm" url="@Url.Action("CarregaModalConfirmacao", "SolicitacaoDocumento", new { novoStatus = ControleDocumentosLibrary.EnumStatusSolicitacao.pendente, idSol = Model.IdSolicitacao })">Reprovar</a>
+                <a type="button" class="btn btn-success btnConfirm" url="@Url.Action("CarregaModalConfirmacao", "SolicitacaoDocumento", new { novoStatus = ControleDocumentosLibrary.EnumStatusSolicitacao.concluido, idSol = Model.IdSolicitacao })">Aprovar</a>
+            }
+            @if (Model.Status != ControleDocumentosLibrary.EnumStatusSolicitacao.cancelado &&
+                Model.Status != ControleDocumentosLibrary.EnumStatusSolicitacao.concluido)
+            {
+                <button type="submit" class="btn btn-primary">Salvar</button>
+            }
+        </div>
+}
+

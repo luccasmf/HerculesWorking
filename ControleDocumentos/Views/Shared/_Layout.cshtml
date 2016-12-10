@@ -1,0 +1,154 @@
+﻿@using ControleDocumentos.Util
+@{ControleDocumentos.Repository.UsuarioRepository ur = new ControleDocumentos.Repository.UsuarioRepository();}
+@{ControleDocumentosLibrary.Usuario user = ur.GetUsuarioById(User.Identity.Name);}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>@ViewBag.Title</title>
+
+    @Scripts.Render("~/bundles/jquery")
+    @Scripts.Render("~/bundles/modernizr")
+    @Scripts.Render("~/bundles/bootstrap")
+    @Scripts.Render("~/bundles/util")
+    <!-- Bootstrap -->
+    @Styles.Render("~/Content/style")
+
+    <!--[if lt IE 9]>
+      <script src="https://oss.maxcdn.com/libs/html5shiv/3.7.0/html5shiv.js"></script>
+      <script src="https://oss.maxcdn.com/libs/respond.js/1.4.2/respond.min.js"></script>
+    <![endif]-->
+    @*<link rel="stylesheet" type="text/css" href="https://cdn.datatables.net/v/bs/dt-1.10.12/datatables.min.css" />
+
+        <script type="text/javascript" src="https://cdn.datatables.net/v/bs/dt-1.10.12/datatables.min.js"></script>*@
+</head>
+<body>
+    <div class="ajax_loader hiddenLoader">
+        <div class="loader">
+            <span></span>
+            <span></span>
+            <span></span>
+        </div>
+    </div>
+    <!-- start: Header -->
+    <div class="navbar">
+        <div class="navbar-inner">
+            <div class="container">
+                <button class="navbar-toggle" type="button" data-toggle="collapse" data-target=".sidebar-nav.nav-collapse">
+                    <span class="icon-bar"></span>
+                    <span class="icon-bar"></span>
+                    <span class="icon-bar"></span>
+                </button>
+                <span class="navbar-brand">Projeto Hercules</span>
+                <!-- start: Header Menu -->
+                <div class="nav-no-collapse header-nav">
+                    <ul class="nav pull-right">
+                        <!-- start: User Dropdown -->
+                        <li class="dropdown">
+                            <a class="btn dropdown-toggle" data-toggle="dropdown" href="index.html#">
+                                <i class="halflings user white"></i> @user.Nome
+                                <span class="caret"></span>
+                            </a>
+                            <ul class="dropdown-menu">
+                                <li><a href="@Url.Action("DadosCadastrais","Home")"><i class="halflings user white"></i> Meu Perfil</a></li>
+                                <li><a onclick="showLoader()" href="@Url.Action("LogOff","Account")"><i class="halflings off white"></i> Sair</a></li>
+                            </ul>
+                        </li>
+                        <!-- end: User Dropdown -->
+                    </ul>
+                </div>
+                <!-- end: Header Menu -->
+
+            </div>
+        </div>
+    </div>
+    <!-- start: Menu -->
+
+    <div class="container">
+        <div class="row">
+            <!-- start: Main Menu -->
+            <div id="sidebar-left" class="col-sm-1">
+                <div class="nav-collapse sidebar-nav collapse navbar-collapse bs-navbar-collapse">
+                    <ul class="nav nav-tabs nav-stacked main-menu">
+
+                        @* Documentos*@
+                        @if (user.Permissao != ControleDocumentosLibrary.EnumPermissaoUsuario.professor)
+                        {
+                            <li class="dropmenu drop-top">
+
+                                <a class="dropmenu" href="#"><i class="fa fa-folder-open"></i><span class="hidden-sm">Documentação</span></a>
+                                <ul>
+                                    @if (user.Permissao == ControleDocumentosLibrary.EnumPermissaoUsuario.coordenador ||
+                                        user.Permissao == ControleDocumentosLibrary.EnumPermissaoUsuario.secretaria)
+                                    {
+                                        <li><a onclick="showLoader()" class="submenu" href="@Url.Action("Index", "Documento")"><span class="submenu-m">Documentos de alunos</span></a></li>
+                                            <li><a onclick="showLoader()" class="submenu" href="@Url.Action("Index", "SolicitacaoDocumento")"><span class="submenu-m">Solicitações de documentos</span></a></li>
+                                            <li><a onclick="showLoader()" class="submenu" href="@Url.Action("Index", "TipoDocumento")"><span class="submenu-m">Tipos de documentos</span></a></li>
+                                    }
+                                    else if (user.Permissao == ControleDocumentosLibrary.EnumPermissaoUsuario.aluno)
+                                    {
+                                        <li><a onclick="showLoader()" class="submenu" href="@Url.Action("Index", "Documento")"><span class="submenu-m">Meus documentos</span></a></li>
+                                            <li><a onclick="showLoader()" class="submenu" href="@Url.Action("Index", "SolicitacaoDocumentoAluno")"><span class="submenu-m">Solicitações de documentos</span></a></li>
+                                    }
+                                </ul>
+                            </li>
+                        }
+
+                        @* Eventos*@
+                        @if (user.Permissao == ControleDocumentosLibrary.EnumPermissaoUsuario.coordenador ||
+                            user.Permissao == ControleDocumentosLibrary.EnumPermissaoUsuario.secretaria ||
+                            user.Permissao == ControleDocumentosLibrary.EnumPermissaoUsuario.professor)
+                        {
+                            <li class="drop-middle"><a onclick="showLoader()" href="@Url.Action("Index", "Evento")"><i class="fa fa-calendar"></i><span class="hidden-sm submenu-m">Eventos</span></a></li>
+                        }
+                        else if (user.Permissao == ControleDocumentosLibrary.EnumPermissaoUsuario.aluno)
+                        {
+                            <li class="drop-middle"><a onclick="showLoader()" href="@Url.Action("MeusEventos", "Evento")"><i class="fa fa-calendar"></i><span class="hidden-sm submenu-m">Meus eventos</span></a></li>
+                        }
+
+                        @* Horas complementares*@
+                        @if (user.Permissao == ControleDocumentosLibrary.EnumPermissaoUsuario.aluno)
+                        {
+                            <li class="drop-bottom"><a onclick="showLoader()" href="@Url.Action("Index", "HoraComplementar")"><i class="fa fa-clock-o"></i><span class="hidden-sm submenu-m">Horas complementares</span></a></li>
+                        }
+                        else if (user.Permissao == ControleDocumentosLibrary.EnumPermissaoUsuario.coordenador ||
+                            user.Permissao == ControleDocumentosLibrary.EnumPermissaoUsuario.secretaria)
+                        {
+                            <li class="drop-bottom"><a onclick="showLoader()" href="@Url.Action("Index", "SolicitacaoHoraComplementar")"><i class="fa fa-clock-o"></i><span class="hidden-sm submenu-m">Solicitações de horas complementares</span></a></li>
+                        }
+
+                        @* Cursos*@
+                        @if (user.Permissao == ControleDocumentosLibrary.EnumPermissaoUsuario.secretaria)
+                        {
+                            <li class="drop-bottom"><a onclick="showLoader()" href="@Url.Action("Index", "Curso")"><i class="fa fa-cog"></i><span class="hidden-sm submenu-m">Cursos</span></a></li>
+                        }
+                    </ul>
+                </div>
+            </div>
+            <!-- end: Main Menu -->
+            <!-- start: Content -->
+            <div id="content" class="col-sm-11">
+                @RenderBody()
+            </div>
+            <!-- end: Content -->
+        </div>
+    </div>
+
+    <div class="container">
+        <div class="modal fade" id="divModalGlobal" aria-hidden="false" style="display: none;">
+            <div id="divModalGlobalBody" class="modal-dialog">
+            </div>
+        </div>
+    </div>
+    <footer>
+        <div class="row">
+            <div class="col-sm-5">
+                &copy; 2016 - CNEC Campo Largo
+            </div>
+        </div>
+    </footer>
+
+</body>
+</html>

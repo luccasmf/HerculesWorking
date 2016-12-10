@@ -1,0 +1,51 @@
+﻿@model ControleDocumentos.Models.SolicitacaoDocumentoEmail
+<!DOCTYPE html>
+<html lang="en" xmlns="http://www.w3.org/1999/xhtml">
+<head>
+    <meta charset="utf-8" />
+    <title></title>
+</head>
+<body>
+    <table style="font-family: 'Tahoma', sans-serif; font-size: 12pt; width: 652px; color: #048FC6">
+        <tr style="height: 50px; vertical-align: top; font-size: 18pt;">
+            <td colspan="2">
+                A solicitação de documento @Model.NomeTipoDocumento do aluno @Model.NomeAluno foi atendida e está pendente de aprovação!
+            </td>
+        </tr>
+        <tr><td colspan="2" height="20px"></td></tr>
+        <tr>
+            <td style="width: 15%">
+                <span style="color: #888888">Documento: </span>
+            </td>
+            <td style="width: 25%">
+                <span style="color: #444444">@Model.NomeTipoDocumento</span>
+            </td>
+        </tr>
+        <tr>
+            <td style="width: 15%">
+                <span style="color: #888888">Aluno: </span>
+            </td>
+            <td style="width: 15%">
+                <span style="color: #444444">@Model.NomeAluno</span>
+            </td>
+        </tr>
+        <tr>
+            <td style="width: 15%">
+                <span style="color: #888888">Aluno: </span>
+            </td>
+            <td style="width: 15%">
+                <span style="color: #444444">@Model.NomeCurso</span>
+            </td>
+        </tr>
+        <tr>
+            <td style="width: 15%">
+                <span style="color: #888888">Observações:</span>
+            </td>
+            <td style="width: 15%">
+                <span style="color: #444444">@Model.Observacao</span>
+            </td>
+        </tr>
+        <tr><td colspan="2" style="padding-top: 20px;"><span style="color: #444444">Você pode acessar o sistema de controle de documentos no link <a href="@Model.UrlSistema">@Model.UrlSistema</a></span></td></tr>
+    </table>
+</body>
+</html>

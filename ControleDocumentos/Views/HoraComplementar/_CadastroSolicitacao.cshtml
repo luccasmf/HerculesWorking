@@ -1,0 +1,54 @@
+﻿@model ControleDocumentosLibrary.SolicitacaoDocumento
+
+<h1>Cadastro de solicitação de horas complementares</h1>
+<br />
+
+@using (Html.BeginForm("SalvarSolicitacao", "HoraComplementar", FormMethod.Post, new { @class = "frm-submit" }))
+{
+    @Html.HiddenFor(x => x.IdSolicitacao)
+
+    if (Model.Documento != null && !string.IsNullOrEmpty(Model.Documento.CaminhoDocumento) && Model.Status != ControleDocumentosLibrary.EnumStatusSolicitacao.cancelado)
+    {
+        <div class="form-group box-content">
+            <i>Documento salvo: </i>&nbsp;<a href="@Url.Action("Download", "Documento", new { nomeDoc = Model.Documento.NomeDocumento })">@Model.Documento.NomeDocumento</a>
+        </div>
+    }
+
+    <div class="form-group row">
+        <div class="col-md-6">
+            @Html.Label("Certificado*")
+            <div class="fileinput fileinput-new" data-provides="fileinput">
+                <input id="uploadFile" name="uploadFile" type="file" class="filestyle" data-buttontext="Procurar">
+            </div>
+        </div>
+    </div>
+
+    <div class="form-group row">
+        <div class="col-md-9">
+            @Html.Label("Observações")
+            @if (Model.Status == ControleDocumentosLibrary.EnumStatusSolicitacao.cancelado)
+                {
+                @Html.TextAreaFor(x => x.Observacao, new { @style = "resize: none;", @class = "form-control", @rows = 10, @disabled = true })
+            }
+            else
+            {
+                @Html.TextAreaFor(x => x.Observacao, new { @style = "resize: none;", @class = "form-control", @rows = 10, @maxlength="500" })
+            }
+        </div>
+    </div>
+
+    <div class="text-right form-group">
+        <a type="button" class="btn btn-default btnCancelar" url="@Url.Action("Index", "HoraComplementar")">Voltar</a>
+        @if (Model.IdSolicitacao > 0 && Model.Status != ControleDocumentosLibrary.EnumStatusSolicitacao.cancelado &&
+            Model.Status != ControleDocumentosLibrary.EnumStatusSolicitacao.concluido)
+        {
+            <a type="button" class="btn btn-danger btnConfirm" url="@Url.Action("CarregaModalConfirmacao", "HoraComplementar", new { novoStatus = ControleDocumentosLibrary.EnumStatusSolicitacao.cancelado, idSol = Model.IdSolicitacao })">Cancelar solicitação</a>
+        }
+        @if (Model.Status != ControleDocumentosLibrary.EnumStatusSolicitacao.cancelado &&
+            Model.Status != ControleDocumentosLibrary.EnumStatusSolicitacao.concluido)
+        {
+            <button type="submit" class="btn btn-primary">Salvar</button>
+        }
+    </div>
+}
+

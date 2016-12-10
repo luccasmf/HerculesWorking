@@ -1,0 +1,24 @@
+﻿@model List<ControleDocumentosLibrary.SolicitacaoDocumento>
+<table class="table table-striped table-bordered commmon-datatable">
+    <thead>
+        <tr>
+            <th>Tipo de documento</th>
+            <th>Status</th>
+            <th>Ações</th>
+        </tr>
+    </thead>
+    <tbody>
+        @foreach (var sol in Model)
+        {
+            <tr>
+                <td>@(sol.Documento != null && sol.Documento.TipoDocumento != null ? sol.Documento.TipoDocumento.TipoDocumento1 : "")</td>
+                <td>@(ControleDocumentos.Util.Extension.EnumExtensions.GetEnumDescription(sol.Status))</td>
+                <td class="center">
+                    <a class="btnCadastro" data-rel="tooltip" title="Visualizar" href="#" url="@Url.Action("CarregarSolicitacao","SolicitacaoDocumentoAluno", new { idSol = sol.IdSolicitacao })">
+                        <i class="icon-action fa fa-eye"></i>
+                    </a>
+                </td>
+            </tr>
+        }
+    </tbody>
+</table>

@@ -1,0 +1,29 @@
+﻿@model List<ControleDocumentosLibrary.Curso>
+<form action="@Url.Action("List", "Curso")" method="get" class="form-filter">
+    <table class="table table-striped table-bordered commmon-datatable">
+        <thead>
+            <tr>
+                <th>Nome</th>
+                <th>Coordenador</th>
+                <th>Ações</th>
+            </tr>
+        </thead>
+        <tbody>
+            @foreach (var curso in Model)
+            {
+                <tr>
+                    <td>@curso.Nome</td>
+                    <td>@(curso.Funcionario != null && curso.Funcionario.Usuario != null ? curso.Funcionario.Usuario.Nome : "")</td>
+                    <td class="center">
+                        <a class="btnCadastro" data-rel="tooltip" title="Editar" url="@Url.Action("CarregaModalCadastro","Curso", new { idCurso = curso.IdCurso })" href="#">
+                            <i class="fa fa-edit icon-action"></i>
+                        </a>
+                        <a class="btnConfirm" data-rel="tooltip" title="Excluir" url="@Url.Action("CarregaModalExclusao","Curso", new { idCurso = curso.IdCurso })" href="#">
+                            <i class="fa fa-trash-o icon-action"></i>
+                        </a>
+                    </td>
+                </tr>
+            }
+        </tbody>
+    </table>
+</form>

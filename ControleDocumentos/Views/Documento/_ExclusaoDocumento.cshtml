@@ -1,0 +1,21 @@
+﻿@model ControleDocumentosLibrary.Documento
+
+<div class="modal-content">
+    <div class="modal-header">
+        <button type="button" class="close" data-dismiss="modal" aria-hidden="true">×</button>
+        <h4 class="modal-title">Exclusão de documento</h4>
+    </div>
+@using (Html.BeginForm("ExcluirDocumento", "Documento", FormMethod.Post, new { @class= "frm-submit-modal" }))
+{
+    @Html.HiddenFor(x => x.IdDocumento)
+    <div class="modal-body">
+        <div class="form-group">
+            @Html.Raw(string.Format("Tem certeza que deseja excluir o documento {0} ?", Model.NomeDocumento))
+        </div>
+    </div>
+    <div class="modal-footer">
+        <button type="button" class="btn btn-default" data-dismiss="modal">Cancelar</button>
+        <button type="submit" class="btn btn-primary">Ok</button>
+    </div>
+}
+</div>

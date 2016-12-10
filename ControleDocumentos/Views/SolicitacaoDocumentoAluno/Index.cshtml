@@ -1,0 +1,30 @@
+﻿@model List<ControleDocumentosLibrary.SolicitacaoDocumento>
+@{
+    ViewBag.Title = "Solicitações de documentos";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+@Scripts.Render("~/Scripts/PageScripts/SolicitacaoDocumentoAluno.js")
+
+<div class="divList">
+    <h1>Solicitações de documentos</h1>
+    <br />
+
+    <div class="text-right">
+        <form action="@Url.Action("List", "SolicitacaoDocumentoAluno")" method="get" class="form-filter">
+            @Html.CheckBox("apenasPendentes", true, new { @url = Url.Action("List", "SolicitacaoDocumentoAluno") })
+            <label for="apenasPendentes">Apenas pendentes de atendimento</label>
+        </form>
+    </div>
+    <div class="row">
+        <div class="box">
+            <div class="box-content partialList">
+                @Html.Partial("_List", Model)
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="divFormSave" style="display:none">
+    <div class="formSave">
+    </div>
+</div>

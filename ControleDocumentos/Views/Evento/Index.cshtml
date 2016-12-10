@@ -1,0 +1,64 @@
+﻿@model List<ControleDocumentosLibrary.Evento>
+@{ControleDocumentos.Repository.UsuarioRepository ur = new ControleDocumentos.Repository.UsuarioRepository();}
+@{ControleDocumentosLibrary.Usuario user = ur.GetUsuarioById(User.Identity.Name);}
+@{
+    ViewBag.Title = "Eventos";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+@Scripts.Render("~/Scripts/PageScripts/Evento.js")
+
+<div class="divList">
+    <h1>Eventos</h1>
+    <br />
+
+    <form action="@Url.Action("List", "Evento")" method="get" class="form-filter">
+        <div class="box">
+            <div class="box-header">
+                <h2>Filtro</h2>
+                <div class="box-icon">
+                    <a class="btn-minimize"><i class="fa fa-chevron-up"></i></a>
+                </div>
+            </div>
+            <div class="box-content">
+                <div class="form-group row">
+                    <div class="col-md-6">
+                        @Html.Label("Nome")
+                        @Html.TextBox("NomeEvento", string.Empty, new { @class = "form-control" })
+                    </div>
+                </div>
+                <div class="form-group row">
+                    <div class="col-md-6">
+                        @Html.Label("Status")
+                        @Html.DropDownList("IdStatus", (SelectList)ViewBag.Status, string.Empty, new { @class = "form-control" })
+                    </div>
+                </div>
+
+            </div>
+        </div>
+        <div class="text-right">
+            @if (user.Permissao != ControleDocumentosLibrary.EnumPermissaoUsuario.professor)
+            {
+                <a type="button" class="btn btn-default btnCadastro" id="btnCadastro" url="@Url.Action("CadastrarEvento", "Evento")" href="#">Novo Evento</a>
+            }
+            <button type="submit" class="btn btn-primary btnPesquisar" id="btnPesquisar">Pesquisar</button>
+        </div>
+    </form>
+
+    <div class="row">
+        <div class="box">
+            <div class="box-content partialList">
+                @Html.Partial("_List", Model)
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="divFormSave" style="display:none">
+    <div class="formSave">
+    </div>
+</div>
+
+<div class="divFormChamada" style="display:none">
+    <div class="formChamada">
+    </div>
+</div>

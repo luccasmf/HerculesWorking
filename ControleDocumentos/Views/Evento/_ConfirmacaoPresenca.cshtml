@@ -1,0 +1,26 @@
+﻿@model ControleDocumentosLibrary.Evento
+@{ 
+    var acao = ViewBag.Presente ? "Confirmação" : "Cancelamento";
+
+    var acaoVerbo = ViewBag.Presente ? "confirmar" : "cancelar";
+}
+<div class="modal-content">
+    <div class="modal-header">
+        <button type="button" class="close" data-dismiss="modal" aria-hidden="true">×</button>
+        <h4 class="modal-title">@(acao +" de participação em evento")</h4>
+    </div>
+@using (Html.BeginForm("ConfirmaCancelaPartipacao", "Evento", FormMethod.Post, new { @class= "frm-submit-modal" }))
+{
+    @Html.HiddenFor(x => x.IdEvento)
+    @Html.Hidden("Presente", (bool)ViewBag.Presente)
+    <div class="modal-body">
+        <div class="form-group">
+            @Html.Raw(string.Format("Tem certeza que deseja {0} sua presença no evento {1}?",acaoVerbo, Model.NomeEvento))
+        </div>
+    </div>
+    <div class="modal-footer">
+        <button type="button" class="btn btn-default" data-dismiss="modal">Cancelar</button>
+        <button type="submit" class="btn btn-primary">Ok</button>
+    </div>
+}
+</div>

@@ -1,0 +1,77 @@
+﻿@model ControleDocumentosLibrary.SolicitacaoDocumento
+
+<h1>Visualização de solicitação de documento</h1>
+<br />
+
+@using (Html.BeginForm("EnviarDocumento", "SolicitacaoDocumentoAluno", FormMethod.Post, new { @enctype = "multipart/form-data", @class = "frm-submit" }))
+{
+    @Html.HiddenFor(x => x.IdSolicitacao)
+    if (Model.Documento != null && !string.IsNullOrEmpty(Model.Documento.CaminhoDocumento))
+    {
+        <div class="form-group box-content">
+            <i>Documento salvo: </i>&nbsp;<a href="@Url.Action("Download", "Documento", new { nomeDoc = Model.Documento.NomeDocumento })">@Model.Documento.NomeDocumento</a>
+        </div>
+    }
+
+    <div class="form-group row">
+        <div class="col-md-6">
+            @Html.Label("Tipo de documento: ")
+            @Html.Raw(Model.Documento.TipoDocumento.TipoDocumento1)
+        </div>
+        <div class="col-md-3">
+            @Html.Label("Prazo: ")
+            @Html.Raw(Model.DataLimite.ToShortDateString())
+        </div>
+    </div>
+
+    <div class="form-group row">
+        <div class="col-md-6">
+            @Html.Label("Curso: ")
+            @Html.Raw(Model.AlunoCurso.Curso.Nome)
+        </div>
+    </div>
+
+    <div class="form-group row">
+        <div class="col-md-6">
+            @Html.Label("Aluno: ")
+            @Html.Raw(Model.AlunoCurso.Aluno.Usuario.Nome)
+        </div>
+    </div>
+
+    <div class="form-group row">
+        <div class="col-md-9">
+            @Html.Label("Observações")
+            @Html.TextArea("ps", Model.Observacao, new { @style = "resize: none;", @class = "form-control", @rows = 10, @disabled = true })
+        </div>
+    </div>
+
+    @*<div class="form-group row">
+            <div class="col-md-9">
+                @Html.Label("Observações")
+                @Html.TextArea("ObservacoesAdicionais", new { @style = "resize: none;", @class = "form-control", @rows = 10 })
+            </div>
+        </div>*@
+
+    if (Model.Status == ControleDocumentosLibrary.EnumStatusSolicitacao.pendente ||
+        Model.Status == ControleDocumentosLibrary.EnumStatusSolicitacao.visualizado)
+    {
+        <div class="form-group row">
+            <div class="col-md-6">
+                @Html.Label("Arquivo*")
+                <div class="fileinput fileinput-new" data-provides="fileinput">
+                    <input id="uploadFile" name="uploadFile" type="file" class="filestyle" data-buttontext="Procurar">
+                </div>
+            </div>
+        </div>
+    }
+
+    <div class="text-right form-group">
+        <a type="button" class="btn btn-default btnCancelar" url="@Url.Action("Index", "SolicitacaoDocumentoAluno")">Voltar</a>
+        @if (Model.Status == ControleDocumentosLibrary.EnumStatusSolicitacao.pendente ||
+            Model.Status == ControleDocumentosLibrary.EnumStatusSolicitacao.visualizado)
+        {
+        <button type="submit" class="btn btn-primary">Salvar</button>
+        }
+    </div>
+}
+
