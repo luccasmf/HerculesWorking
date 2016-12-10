@@ -334,7 +334,7 @@ namespace ControleDocumentos.Controllers
 
                 if (sol.Status == EnumStatusSolicitacao.pendente && !string.IsNullOrEmpty(sol.Documento.CaminhoDocumento))
                 {
-                    documentoRepository.DeletaArquivo(sol.Documento)
+                    documentoRepository.DeletaArquivo(sol.Documento);
                     //DirDoc.DeletaArquivo(sol.Documento.CaminhoDocumento);
                     //sol.Documento.CaminhoDocumento = null;
                 }
