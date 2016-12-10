@@ -60,7 +60,8 @@
                             <i class="icon-action @(ev.Status == ControleDocumentosLibrary.EnumStatusEvento.cancelado || ev.Status == ControleDocumentosLibrary.EnumStatusEvento.concluido || ev.Status == ControleDocumentosLibrary.EnumStatusEvento.certificados ? "fa fa-eye" : "fa fa-edit")"></i>
                         </a>
 
-                        if (ev.Status != ControleDocumentosLibrary.EnumStatusEvento.cancelado && ev.Status != ControleDocumentosLibrary.EnumStatusEvento.certificados)
+                        if (user.Permissao != ControleDocumentosLibrary.EnumPermissaoUsuario.secretaria &&
+                            ev.Status != ControleDocumentosLibrary.EnumStatusEvento.cancelado && ev.Status != ControleDocumentosLibrary.EnumStatusEvento.certificados)
                         {
                             <a class="btnChamada" data-rel="tooltip" title="Fazer Chamada" href="#" url="@Url.Action("Chamada", "Evento", new { idEvento = ev.IdEvento })">
                                 <i class="icon-action fa fa-list"></i>

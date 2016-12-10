@@ -32,7 +32,7 @@ namespace ControleDocumentos.Controllers
             ViewBag.HrsComputadas = al.HoraCompleta.HasValue && al.HoraCompleta.Value > 0 ? al.HoraCompleta.Value : 0;
             ViewBag.HrsNecessarias = al.HoraNecessaria;
 
-            List<SolicitacaoDocumento> retorno = solicitacaoRepository.GetMinhaSolicitacao(User.Identity.Name).ToList();
+            List<SolicitacaoDocumento> retorno = solicitacaoRepository.GetMinhaSolicitacao(User.Identity.Name).Where(x => x.TipoSolicitacao == EnumTipoSolicitacao.aluno).ToList();
             return View(retorno);
         }
 
@@ -164,13 +164,15 @@ namespace ControleDocumentos.Controllers
             {
                 var sol = solicitacaoRepository.GetSolicitacaoById(solic.IdSolicitacao);
                 sol.Status = EnumStatusSolicitacao.cancelado;
-                if (sol.Status == EnumStatusSolicitacao.cancelado && !string.IsNullOrEmpty(sol.Documento.CaminhoDocumento))
-                {
-                    DirDoc.DeletaArquivo(sol.Documento.CaminhoDocumento);
-                    sol.Documento.CaminhoDocumento = null;
-                }
+                
                 string msg = solicitacaoRepository.PersisteSolicitacao(sol);
 
+                if (sol.Status == EnumStatusSolicitacao.cancelado && !string.IsNullOrEmpty(sol.Documento.CaminhoDocumento))
+                {
+                    documentoRepository.DeletaArquivo(sol.Documento);
+                    //DirDoc.DeletaArquivo(sol.Documento.CaminhoDocumento);
+                    //sol.Documento.CaminhoDocumento = null;
+                }
                 if (msg != "Erro")
                 {
                     Utilidades.SalvaLog(user, EnumAcao.Cancelar, sol, sol.IdSolicitacao);

@@ -38,7 +38,7 @@ namespace ControleDocumentos.Controllers
                 return View(retorno);
             }
             return View(solicitacaoRepository.GetByFilter(new Models.SolicitacaoDocumentoFilter())
-                .Where(x => (x.Status == EnumStatusSolicitacao.pendente || x.Status == EnumStatusSolicitacao.visualizado) 
+                .Where(x => (x.Status == EnumStatusSolicitacao.pendente || x.Status == EnumStatusSolicitacao.visualizado)
                 && x.TipoSolicitacao == EnumTipoSolicitacao.aluno).ToList());
         }
 
@@ -174,11 +174,7 @@ namespace ControleDocumentos.Controllers
 
                 var sol = solicitacaoRepository.GetSolicitacaoById(solic.IdSolicitacao);
                 sol.Status = solic.Status;
-                if (sol.Status == EnumStatusSolicitacao.reprovado && !string.IsNullOrEmpty(sol.Documento.CaminhoDocumento))
-                {
-                    DirDoc.DeletaArquivo(sol.Documento.CaminhoDocumento);
-                    sol.Documento.CaminhoDocumento = null;
-                }
+
                 if (sol.Status == EnumStatusSolicitacao.reprovado)
                 {
                     sol.Observacao = solic.Observacao;
@@ -198,6 +194,13 @@ namespace ControleDocumentos.Controllers
                 {
                     try
                     {
+                        if (sol.Status == EnumStatusSolicitacao.reprovado && !string.IsNullOrEmpty(sol.Documento.CaminhoDocumento))
+                        {
+                            documentoRepository.DeletaArquivo(sol.Documento);
+                            //DirDoc.DeletaArquivo(sol.Documento.CaminhoDocumento);
+                            //sol.Documento.CaminhoDocumento = null;
+                        }
+
                         var acao = sol.Status == EnumStatusSolicitacao.concluido ? "aprovada" :
                             sol.Status == EnumStatusSolicitacao.reprovado ? "reprovada" : "";
 

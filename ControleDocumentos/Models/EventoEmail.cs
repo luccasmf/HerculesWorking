@@ -15,6 +15,7 @@ namespace ControleDocumentos.Models
         public DateTime DataInicio { get; set; }
         public DateTime DataFim { get; set; }
         public string Observacao { get; set; }
+        public string Status { get; set; }
 
         public string UrlSistema { get; set; }
         public string EmailAluno { get; set; }

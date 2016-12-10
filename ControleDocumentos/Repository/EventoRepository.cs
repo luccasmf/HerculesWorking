@@ -113,6 +113,7 @@ namespace ControleDocumentos.Repository
                 DataInicio = ev.DataInicio,
                 Local = ev.Local,
                 NomeEvento = ev.NomeEvento,
+                Status = ev.Status.ToString(),
                 Observacao = ev.Observacao,
                 Vagas = ev.Vagas
             };
@@ -135,6 +136,7 @@ namespace ControleDocumentos.Repository
             {
                 if (ev.IdEvento > 0)
                 {
+                    ev.VagasPreenchidas = db.Evento.Find(ev.IdEvento).VagasPreenchidas;
                     return ComparaInfos(ev, idsCurso);
                 }
                 else

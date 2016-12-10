@@ -25,8 +25,6 @@ namespace ControleDocumentos.Controllers
         public ActionResult Index()
         {
             Usuario user = GetSessionUser();
-            // apenas se decidirmos n usar o datatables como filtro
-            // PopularDropDowns();
 
             if (user.Permissao == EnumPermissaoUsuario.coordenador)
             {

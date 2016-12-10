@@ -59,9 +59,19 @@ namespace ControleDocumentos.Controllers
 
         public ActionResult List(EventoFilter filter)
         {
+            List<Evento> eventos;
             Usuario user = GetSessionUser();
 
-            return PartialView("_List", eventoRepository.GetByFilterCoord(user.IdUsuario, filter));
+            if (user.Permissao == EnumPermissaoUsuario.coordenador)
+            {
+                eventos = eventoRepository.GetByFilterCoord(user.IdUsuario, new EventoFilter());
+            }
+            else
+            {
+                eventos = eventoRepository.GetByFilter(new EventoFilter());
+            }
+
+            return PartialView("_List", eventos);
         }
 
         public ActionResult CarregaModalConfirmacao(EnumStatusEvento novoStatus, int idEvento)
@@ -208,7 +218,6 @@ namespace ControleDocumentos.Controllers
         [AuthorizeAD(Groups = "G_FACULDADE_PROFESSOR_R, G_FACULDADE_PROFESSOR_RW, G_FACULDADE_COORDENADOR_R, G_FACULDADE_COORDENADOR_RW")]
         public object GeraCertificados(int idEvento)
         {
-            // falta testar esse metodo depois que a chamada estiver funcionando
             bool flag = DirDoc.GeraCertificado(idEvento);
 
             if (flag)
@@ -223,22 +232,29 @@ namespace ControleDocumentos.Controllers
                     var html = RazorEngine.Razor.Parse(viewCode, eventoEmail);
                     List<Aluno> alunosPresentes = eventoRepository.GetAlunosPresentes(evento);
 
-                    if (alunosPresentes != null && alunosPresentes.Count > 0 && alunosPresentes.Any(x => x.Usuario.E_mail != ""))
+                    eventoRepository.AlteraStatusEvento(idEvento, EnumStatusEvento.certificados);
+
+                    try
                     {
-                        var to = alunosPresentes.Where(x => !string.IsNullOrEmpty(x.Usuario.E_mail)).Select(x => x.Usuario.E_mail).ToArray();
-                        var from = System.Configuration.ConfigurationManager.AppSettings["MailFrom"].ToString();
-                        Email.EnviarEmail(from, to, string.Format("Certificado do evento {0} gerado",evento.NomeEvento), html);
+                        if (alunosPresentes != null && alunosPresentes.Count > 0 && alunosPresentes.Any(x => x.Usuario.E_mail != ""))
+                        {
+                            var to = alunosPresentes.Where(x => !string.IsNullOrEmpty(x.Usuario.E_mail)).Select(x => x.Usuario.E_mail).ToArray();
+                            var from = System.Configuration.ConfigurationManager.AppSettings["MailFrom"].ToString();
+                            Email.EnviarEmail(from, to, string.Format("Certificado do evento {0} gerado", evento.NomeEvento), html);
+                        }
                     }
+                    catch (Exception ex)
+                    {
+                    }
+
+                    return Json(new { Status = true, Type = "success", Message = "Certificados gerados com sucesso!", ReturnUrl = Url.Action("Index") }, JsonRequestBehavior.AllowGet);
                 }
                 catch (Exception ex)
                 {
+                    return Json(new { Status = false, Type = "error", Message = "Houve um erro, tente novamente mais tarde!" }, JsonRequestBehavior.AllowGet);
                 }
-
-                eventoRepository.AlteraStatusEvento(idEvento, EnumStatusEvento.certificados);
-                return Json(new { Status = true, Type = "success", Message = "Certificados gerados com sucesso!", ReturnUrl = Url.Action("Index") }, JsonRequestBehavior.AllowGet);
             }
             return Json(new { Status = false, Type = "error", Message = "Houve um erro, tente novamente mais tarde!" }, JsonRequestBehavior.AllowGet);
-
         }
 
         [AuthorizeAD(Groups = "G_FACULDADE_PROFESSOR_R, G_FACULDADE_PROFESSOR_RW, G_FACULDADE_COORDENADOR_R, G_FACULDADE_COORDENADOR_RW")]

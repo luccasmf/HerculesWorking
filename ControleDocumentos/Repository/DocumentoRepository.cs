@@ -64,12 +64,17 @@ namespace ControleDocumentos.Repository
             return db.SaveChanges() > 0;
         }
 
-        public bool DeletaArquivo(Documento doc)
+        public bool DeletaArquivo(Documento doc, bool deletaSolicitacao = false)
         {
             doc = db.Documento.Find(doc.IdDocumento);
-            if (DirDoc.DeletaArquivo(doc.CaminhoDocumento) || string.IsNullOrEmpty(doc.CaminhoDocumento))
+            if (string.IsNullOrEmpty(doc.CaminhoDocumento) || DirDoc.DeletaArquivo(doc.CaminhoDocumento))
             {
-                db.SolicitacaoDocumento.Remove(doc.SolicitacaoDocumento.FirstOrDefault());
+                if (deletaSolicitacao)
+                {
+                    if (db.SolicitacaoDocumento != null && db.SolicitacaoDocumento.Count() > 0)
+                        db.SolicitacaoDocumento.Remove(doc.SolicitacaoDocumento.FirstOrDefault());
+                }
+
                 db.Documento.Remove(doc);
 
                 return db.SaveChanges() > 0;
@@ -106,7 +111,7 @@ namespace ControleDocumentos.Repository
         {
             List<Documento> docs = (from doc in db.Documento
                                     join ac in db.AlunoCurso on doc.IdAlunoCurso equals ac.IdAlunoCurso
-                                   join al in db.Aluno on ac.IdAluno equals al.IdAluno
+                                    join al in db.Aluno on ac.IdAluno equals al.IdAluno
                                     where al.IdUsuario == idAluno
                                     select doc).ToList();
 

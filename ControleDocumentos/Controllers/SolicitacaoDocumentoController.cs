@@ -32,7 +32,7 @@ namespace ControleDocumentos.Controllers
                 List<SolicitacaoDocumento> retorno = solicitacaoRepository.GetSolicitacaoByCoordenador(User.Identity.Name).Where(x => x.Status == EnumStatusSolicitacao.processando && x.TipoSolicitacao == EnumTipoSolicitacao.secretaria).ToList();
                 return View(retorno);
             }
-            return View(solicitacaoRepository.GetByFilter(new Models.SolicitacaoDocumentoFilter { IdStatus = (int)EnumStatusSolicitacao.processando }));
+            return View(solicitacaoRepository.GetByFilter(new Models.SolicitacaoDocumentoFilter { IdStatus = (int)EnumStatusSolicitacao.processando }).Where(x => x.TipoSolicitacao == EnumTipoSolicitacao.secretaria).ToList());
         }
 
         public ActionResult CadastrarSolicitacao(int? idSol)
@@ -73,7 +73,7 @@ namespace ControleDocumentos.Controllers
             {
                return PartialView("_List", solicitacaoRepository.GetByFilterCoordenador(filter, User.Identity.Name).Where(x => x.TipoSolicitacao == EnumTipoSolicitacao.secretaria).ToList());
             }
-            return PartialView("_List", solicitacaoRepository.GetByFilter(filter));
+            return PartialView("_List", solicitacaoRepository.GetByFilter(filter).Where(x => x.TipoSolicitacao == EnumTipoSolicitacao.secretaria).ToList());
         }
 
         public ActionResult CarregaModalExclusao(int idSol)
@@ -301,7 +301,7 @@ namespace ControleDocumentos.Controllers
             var s = solicitacaoRepository.GetSolicitacaoById(sol.IdSolicitacao);
             if (s.Status == EnumStatusSolicitacao.pendente) //regra q soh deleta se status for pendente
             {
-                if (solicitacaoRepository.DeletaArquivo(s))
+                if (documentoRepository.DeletaArquivo(s.Documento, true))
                 {
                     Utilidades.SalvaLog(user, EnumAcao.Excluir, s, s.IdSolicitacao);
                     return Json(new { Status = true, Type = "success", Message = "Solicitação deletada com sucesso!" }, JsonRequestBehavior.AllowGet);
@@ -329,13 +329,15 @@ namespace ControleDocumentos.Controllers
 
                 var sol = solicitacaoRepository.GetSolicitacaoById(solic.IdSolicitacao);
                 sol.Status = solic.Status;
-                if (sol.Status == EnumStatusSolicitacao.pendente && !string.IsNullOrEmpty(sol.Documento.CaminhoDocumento))
-                {
-                    DirDoc.DeletaArquivo(sol.Documento.CaminhoDocumento);
-                    sol.Documento.CaminhoDocumento = null;
-                }
+
                 string msg = solicitacaoRepository.PersisteSolicitacao(sol);
 
+                if (sol.Status == EnumStatusSolicitacao.pendente && !string.IsNullOrEmpty(sol.Documento.CaminhoDocumento))
+                {
+                    documentoRepository.DeletaArquivo(sol.Documento)
+                    //DirDoc.DeletaArquivo(sol.Documento.CaminhoDocumento);
+                    //sol.Documento.CaminhoDocumento = null;
+                }
                 if (msg != "Erro")
                 {
                     try
