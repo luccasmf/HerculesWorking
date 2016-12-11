@@ -20,7 +20,7 @@ namespace ControleDocumentosLibrary
 
         public int IdTipoDoc { get; set; }
 
-        [Column(TypeName = "text")]
+        [StringLength(200)]
         public string NomeDocumento { get; set; }
 
         public DateTime Data { get; set; }
