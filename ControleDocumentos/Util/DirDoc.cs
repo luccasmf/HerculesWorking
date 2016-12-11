@@ -139,7 +139,7 @@ namespace ControleDocumentos
         /// <returns>um caminho temporário para baixar o arquivo</returns>
         public static byte[] BaixaArquivo(Documento doc, Usuario user)
         {
-                        
+
             if (user.Permissao == EnumPermissaoUsuario.deslogado)
             {
                 return null;
@@ -250,6 +250,7 @@ namespace ControleDocumentos
 
                         #region substitui informaçoes seguindo a template       
 
+
                         DocX doc = DocX.Create(novoArquivo);
 
                         doc.ApplyTemplate(template, true);
@@ -289,6 +290,7 @@ namespace ControleDocumentos
                         novoArquivo = Path.ChangeExtension(novoArquivo, ".pdf");
                         pdf.SaveToFile(novoArquivo, FileFormat.PDF);
                     }
+
                     #region criptografa certificado
                     try
                     {
@@ -314,8 +316,10 @@ namespace ControleDocumentos
                         flag = false;
                     }
                     #endregion
+
+                    #endregion
                 }
-                #endregion
+
             }
 
             if (!documentoRepository.PersisteCertificados(certificadosDoc))

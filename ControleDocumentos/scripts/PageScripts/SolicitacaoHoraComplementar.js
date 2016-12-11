@@ -4,11 +4,11 @@ $(document).ready(function () {
     bindShowConfirmacao();
     bindDatatable();
     bindFormFilter();
-    bindCancelar();
     bindCadastro();
 
     bindAlterarStatus();
     bindFormSubmitAlterarStatus();
+    bindCancelarSol();
 });
 
 function bindAlterarStatus() {
@@ -68,5 +68,18 @@ function bindFormSubmitAlterarStatus() {
             },
         });
         return false;
+    });
+}
+
+
+function bindCancelarSol() {
+    $(document).on("click", ".btnCancelar", function () {
+        $(".divFormSave").hide();
+        $(".divList").show();
+
+        $('.form-filter').trigger('submit', function () {
+            bindFormFilter();
+            inicializaTooltip();
+        });
     });
 }

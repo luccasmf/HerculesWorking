@@ -71,19 +71,27 @@ namespace ControleDocumentos.Repository
 
         public bool DeletaArquivo(Documento doc, bool deletaSolicitacao = false)
         {
-            doc = db.Documento.Find(doc.IdDocumento);
-            if (string.IsNullOrEmpty(doc.CaminhoDocumento) || DirDoc.DeletaArquivo(doc.CaminhoDocumento))
+            try
             {
-                if (deletaSolicitacao)
+                doc = db.Documento.Find(doc.IdDocumento);
+                if (string.IsNullOrEmpty(doc.CaminhoDocumento) || DirDoc.DeletaArquivo(doc.CaminhoDocumento))
                 {
-                    if (db.SolicitacaoDocumento != null && db.SolicitacaoDocumento.Count() > 0)
-                        db.SolicitacaoDocumento.Remove(doc.SolicitacaoDocumento.FirstOrDefault());
+                    if (deletaSolicitacao)
+                    {
+                        if (db.SolicitacaoDocumento != null && db.SolicitacaoDocumento.Count() > 0)
+                            db.SolicitacaoDocumento.Remove(doc.SolicitacaoDocumento.FirstOrDefault());
+                    }
+
+                    db.Documento.Remove(doc);
+
+                    return db.SaveChanges() > 0;
                 }
-
-                db.Documento.Remove(doc);
-
-                return db.SaveChanges() > 0;
             }
+            catch (Exception)
+            {
+                return false;
+            }
+            
             return false;
         }
 

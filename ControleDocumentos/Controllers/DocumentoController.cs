@@ -229,7 +229,7 @@ namespace ControleDocumentos.Controllers
                 Utilidades.SalvaLog(user, EnumAcao.Excluir, doc, (int?)doc.IdDocumento);
                 return Json(new { Status = true, Type = "success", Message = "Documento deletado com sucesso!", ReturnUrl = Url.Action("Index") }, JsonRequestBehavior.AllowGet);
             }
-            return Json(new { Status = false, Type = "error", Message = "Ocorreu um erro ao realizar esta operação" }, JsonRequestBehavior.AllowGet);
+            return Json(new { Status = false, Type = "error", Message = "Ocorreu um erro ao realizar esta operação, verifique se existe uma solicitação vinculada a este documento." }, JsonRequestBehavior.AllowGet);
 
         }
 
