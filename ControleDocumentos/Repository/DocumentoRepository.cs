@@ -59,7 +59,12 @@ namespace ControleDocumentos.Repository
         public bool PersisteCertificados(List<Documento> docs)
         {
             foreach (Documento doc in docs)
+            {
+               // doc.AlunoCurso = db.AlunoCurso.Find(doc.IdAlunoCurso);
+               // doc.IdAlunoCurso = null;
                 db.Documento.Add(doc);
+            }
+                
 
             return db.SaveChanges() > 0;
         }

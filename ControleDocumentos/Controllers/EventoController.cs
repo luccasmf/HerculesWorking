@@ -86,16 +86,16 @@ namespace ControleDocumentos.Controllers
 
             try
             {
-                var ev = eventoRepository.GetEventoById(evento.IdEvento);
-                ev.Status = evento.Status;
+               //var ev = eventoRepository.GetEventoById(evento.IdEvento);
+               //ev.Status = evento.Status;
 
-                string msg = eventoRepository.AlteraStatusEvento(evento.IdEvento, evento.Status);
+                Evento ev = eventoRepository.AlteraStatusEvento(evento.IdEvento, evento.Status);
 
-                if (msg != "Erro")
+                if (ev != null)
                 {
                     try
                     {
-                        if (ev.Status == EnumStatusEvento.cancelado)
+                        if (evento.Status == EnumStatusEvento.cancelado)
                         {
                             var url = System.Web.Hosting.HostingEnvironment.MapPath("~/Views/Email/AlteracaoEvento.cshtml");
                             string viewCode = System.IO.File.ReadAllText(url);
