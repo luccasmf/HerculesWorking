@@ -28,13 +28,13 @@ namespace ControleDocumentos.Controllers
 
             if (user.Permissao == EnumPermissaoUsuario.coordenador)
             {
-                List<Documento> retorno = documentoRepository.GetDocsByCoordenador(user.IdUsuario);
+                List<Documento> retorno = documentoRepository.GetDocsByCoordenador(user.IdUsuario).Where(x => x.NomeDocumento != "").ToList();
                 return View(retorno);
             }
 
             if (user.Permissao == EnumPermissaoUsuario.aluno)
             {
-                List<Documento> retorno = documentoRepository.GetDocsByAluno(user.IdUsuario);
+                List<Documento> retorno = documentoRepository.GetDocsByAluno(user.IdUsuario).Where(x => x.NomeDocumento != "").ToList();
                 return View(retorno);
             }
             
