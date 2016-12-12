@@ -276,8 +276,9 @@ namespace ControleDocumentos.Controllers
             alunos = eventoRepository.GetListaChamada(idEvento);
 
             Evento evento = eventoRepository.GetEventoById(idEvento);
+            int duracaoEvento = (evento.DataFim - evento.DataInicio).Days + 1;
 
-            if (evento.Chamada.Count >= (evento.DataFim - evento.DataInicio).Days)
+            if (evento.Chamada.Count >= duracaoEvento && !chamadaFeita)
             {
                 return Json(new { Status = false, Type = "error", Message = "Todas as chamadas já foram efetuadas para este evento" }, JsonRequestBehavior.AllowGet);
             }

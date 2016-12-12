@@ -27,7 +27,8 @@ namespace ControleDocumentos.Repository
 
         public List<Documento> GetAllDocs()
         {
-            return db.Documento.ToList();
+            DocumentosModel db2 = new DocumentosModel();
+            return db2.Documento.ToList();
         }
 
         public bool PersisteDocumento(Documento doc)
