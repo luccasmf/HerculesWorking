@@ -196,7 +196,7 @@ namespace ControleDocumentos.Controllers
                     {
                         if (sol.Status == EnumStatusSolicitacao.reprovado && !string.IsNullOrEmpty(sol.Documento.CaminhoDocumento))
                         {
-                            documentoRepository.DeletaArquivo(sol.Documento);
+                            documentoRepository.DeletaArquivo(sol.Documento,false);
                             //DirDoc.DeletaArquivo(sol.Documento.CaminhoDocumento);
                             //sol.Documento.CaminhoDocumento = null;
                         }

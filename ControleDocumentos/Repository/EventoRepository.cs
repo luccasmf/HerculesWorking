@@ -80,25 +80,18 @@ namespace ControleDocumentos.Repository
 
         public List<Evento> GetByFilter(EventoFilter filter)
         {
-            List<Evento> eventos = new List<Evento>();
+            List<Evento> eventos = db.Evento.ToList();
 
-            if (!string.IsNullOrEmpty(filter.NomeEvento) && filter.IdStatus == null)
+            if (!string.IsNullOrEmpty(filter.NomeEvento))
             {
-                eventos = db.Evento.Where(x => x.NomeEvento.Contains(filter.NomeEvento)).ToList();
-            }
-            else if (filter.IdStatus!=null && string.IsNullOrEmpty(filter.NomeEvento))
-            {
-                eventos = db.Evento.Where(x => x.Status == (EnumStatusEvento)filter.IdStatus).ToList();
-            }
-            else if (filter.IdStatus!=null && !string.IsNullOrEmpty(filter.NomeEvento))
-            {
-                eventos = db.Evento.Where(x => x.Status == (EnumStatusEvento)filter.IdStatus && x.NomeEvento.Contains(filter.NomeEvento)).ToList();
-            }
-            else
-            {
-                eventos = db.Evento.ToList();
+                eventos = eventos.Where(x => x.NomeEvento.Contains(filter.NomeEvento)).ToList();
             }
 
+            if (filter.IdStatus!=null)
+            {
+                eventos = eventos.Where(x => x.Status == (EnumStatusEvento)filter.IdStatus).ToList();
+            }
+            
 
             return eventos;
         }

@@ -101,19 +101,20 @@ namespace ControleDocumentos.Repository
         {
             List<SolicitacaoDocumento> solicitacosDocumento = db.SolicitacaoDocumento.ToList();
 
-            if (filter.IdCurso != null && filter.IdStatus != null) //se nenhum for nulo faz esse
-            {
-                solicitacosDocumento = solicitacosDocumento.Where(x => x.AlunoCurso.IdCurso == filter.IdCurso && x.Status == (EnumStatusSolicitacao)filter.IdStatus).ToList();
-
-            }
-            else if (filter.IdCurso != null) //se status for nulo faz esse
+            if (filter.IdCurso != null)
             {
                 solicitacosDocumento = solicitacosDocumento.Where(x => x.AlunoCurso.IdCurso == filter.IdCurso).ToList();
             }
-            else if (filter.IdStatus != null) //se curso for nulo faz esse
+
+            if (filter.IdStatus != null)
             {
                 solicitacosDocumento = solicitacosDocumento.Where(x => x.Status == (EnumStatusSolicitacao)filter.IdStatus).ToList();
-            }            
+            }
+            else
+            {
+                solicitacosDocumento = solicitacosDocumento.Where(x => x.Status != EnumStatusSolicitacao.excluido).ToList();
+
+            }                    
 
             return solicitacosDocumento;
         }
@@ -123,17 +124,25 @@ namespace ControleDocumentos.Repository
             SolicitacaoDocumento solic = db.SolicitacaoDocumento.Find(sol.IdSolicitacao);
             try
             {
-                File.Delete(solic.Documento.CaminhoDocumento);
-
+                if (solic.Documento != null)
+                {
+                    DocumentoRepository docRep = new DocumentoRepository();
+                    docRep.DeletaArquivo(solic.Documento,false);
+                }
             }
             catch
             {
 
             }
-            solic.Documento.arquivo = sol.Documento.arquivo;
-            solic.Documento.NomeDocumento = sol.Documento.NomeDocumento;
             solic.DataAbertura = DateTime.Now;
             solic.DataLimite = solic.DataAbertura.AddDays(7);
+
+            solic.Documento = solic.Documento == null ? new Documento() : solic.Documento;
+            solic.Documento.arquivo = sol.Documento.arquivo;
+            solic.Documento.NomeDocumento = sol.Documento.NomeDocumento;
+            solic.Documento.IdAlunoCurso = solic.IdAlunoCurso;
+            solic.Documento.IdTipoDoc = sol.Documento.IdTipoDoc;
+
             string msgDoc = DirDoc.SalvaArquivo(solic.Documento);
 
             if(db.SaveChanges()>0)
