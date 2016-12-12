@@ -168,13 +168,7 @@ namespace ControleDocumentos.Controllers
                 sol.Status = EnumStatusSolicitacao.cancelado;
                 
                 string msg = solicitacaoRepository.PersisteSolicitacao(sol);
-
-                if (sol.Status == EnumStatusSolicitacao.cancelado && !string.IsNullOrEmpty(sol.Documento.CaminhoDocumento))
-                {
-                    documentoRepository.DeletaArquivo(sol.Documento,true);
-                    //DirDoc.DeletaArquivo(sol.Documento.CaminhoDocumento);
-                    //sol.Documento.CaminhoDocumento = null;
-                }
+                                
                 if (msg != "Erro")
                 {
                     Utilidades.SalvaLog(user, EnumAcao.Cancelar, sol, sol.IdSolicitacao);
