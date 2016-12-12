@@ -1,7 +1,7 @@
 ﻿
 Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio 14
-VisualStudioVersion = 14.0.23107.0
+VisualStudioVersion = 14.0.24720.0
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ControleDocumentos", "ControleDocumentos\ControleDocumentos.csproj", "{0EA7A0E6-A9F2-47C2-BB13-B16D7CCAA685}"
 EndProject
@@ -9,6 +9,7 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ControleDocumentosLibrary",
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution Items", "{48BF8F40-6642-4500-9C06-9E54824B835D}"
 	ProjectSection(SolutionItems) = preProject
+		project hercules.ppt = project hercules.ppt
 		TCC 2. (22-11).docx = TCC 2. (22-11).docx
 		TCC 2.docx = TCC 2.docx
 		template-certificado.docx = template-certificado.docx
