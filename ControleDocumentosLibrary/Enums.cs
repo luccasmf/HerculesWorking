@@ -37,6 +37,8 @@ namespace ControleDocumentosLibrary
         cancelado,
         [Description("Reprovado")]
         reprovado,
+        [Description("Documento Excluído")]
+        excluido,
     }
 
     public enum EnumStatusEvento : int

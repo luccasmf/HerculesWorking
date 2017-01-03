@@ -107,10 +107,12 @@ namespace ControleDocumentos.Controllers
                     sol.Documento = new Documento();
                     sol.Documento.arquivo = DirDoc.converterFileToArray(uploadFile);
                     sol.Documento.NomeDocumento = uploadFile.FileName;
+                    sol.Documento.IdAlunoCurso = sol.IdAlunoCurso;
+
+                    sol.Documento.IdTipoDoc = tipoDocumentoRepository.GetTipoDoc("certificado").IdTipoDoc;
 
                     msg = solicitacaoRepository.AlteraDocumento(sol);
                 }
-
 
                 if (msg != "Erro")
                 {
@@ -166,13 +168,7 @@ namespace ControleDocumentos.Controllers
                 sol.Status = EnumStatusSolicitacao.cancelado;
                 
                 string msg = solicitacaoRepository.PersisteSolicitacao(sol);
-
-                if (sol.Status == EnumStatusSolicitacao.cancelado && !string.IsNullOrEmpty(sol.Documento.CaminhoDocumento))
-                {
-                    documentoRepository.DeletaArquivo(sol.Documento);
-                    //DirDoc.DeletaArquivo(sol.Documento.CaminhoDocumento);
-                    //sol.Documento.CaminhoDocumento = null;
-                }
+                                
                 if (msg != "Erro")
                 {
                     Utilidades.SalvaLog(user, EnumAcao.Cancelar, sol, sol.IdSolicitacao);

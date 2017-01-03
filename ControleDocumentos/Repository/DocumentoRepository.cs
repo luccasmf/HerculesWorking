@@ -27,7 +27,8 @@ namespace ControleDocumentos.Repository
 
         public List<Documento> GetAllDocs()
         {
-            return db.Documento.ToList();
+            DocumentosModel db2 = new DocumentosModel();
+            return db2.Documento.ToList();
         }
 
         public bool PersisteDocumento(Documento doc)
@@ -60,38 +61,48 @@ namespace ControleDocumentos.Repository
         {
             foreach (Documento doc in docs)
             {
-               // doc.AlunoCurso = db.AlunoCurso.Find(doc.IdAlunoCurso);
-               // doc.IdAlunoCurso = null;
+                // doc.AlunoCurso = db.AlunoCurso.Find(doc.IdAlunoCurso);
+                // doc.IdAlunoCurso = null;
                 db.Documento.Add(doc);
             }
-                
+
 
             return db.SaveChanges() > 0;
         }
 
-        public bool DeletaArquivo(Documento doc, bool deletaSolicitacao = false)
+        public bool DeletaArquivo(Documento doc, bool deletaDoc)
         {
+            SolicitacaoDocumento sol = new SolicitacaoDocumento();
             try
             {
                 doc = db.Documento.Find(doc.IdDocumento);
                 if (string.IsNullOrEmpty(doc.CaminhoDocumento) || DirDoc.DeletaArquivo(doc.CaminhoDocumento))
                 {
-                    if (deletaSolicitacao)
+                    doc.NomeDocumento = "";
+                    doc.CaminhoDocumento = null;
+                   
+                    if(deletaDoc)
                     {
-                        if (db.SolicitacaoDocumento != null && db.SolicitacaoDocumento.Count() > 0)
-                            db.SolicitacaoDocumento.Remove(doc.SolicitacaoDocumento.FirstOrDefault());
-                    }
+                        if(doc.SolicitacaoDocumento.Count() > 0)
+                        {
+                            sol = db.SolicitacaoDocumento.Find(doc.SolicitacaoDocumento.FirstOrDefault().IdSolicitacao);
+                            sol.Status = EnumStatusSolicitacao.excluido;
 
-                    db.Documento.Remove(doc);
+                            doc.SolicitacaoDocumento.Clear();
+
+                        }
+                        db.Documento.Remove(doc);
+                    }
+                   
 
                     return db.SaveChanges() > 0;
                 }
             }
-            catch (Exception)
+            catch (Exception ex)
             {
                 return false;
             }
-            
+
             return false;
         }
 

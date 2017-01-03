@@ -28,16 +28,17 @@ namespace ControleDocumentos.Controllers
 
             if (user.Permissao == EnumPermissaoUsuario.coordenador)
             {
-                List<Documento> retorno = documentoRepository.GetDocsByCoordenador(user.IdUsuario);
+                List<Documento> retorno = documentoRepository.GetDocsByCoordenador(user.IdUsuario).Where(x => x.NomeDocumento != "").ToList();
                 return View(retorno);
             }
 
             if (user.Permissao == EnumPermissaoUsuario.aluno)
             {
-                List<Documento> retorno = documentoRepository.GetDocsByAluno(user.IdUsuario);
+                List<Documento> retorno = documentoRepository.GetDocsByAluno(user.IdUsuario).Where(x => x.NomeDocumento != "").ToList();
                 return View(retorno);
             }
-            return View(documentoRepository.GetAllDocs());
+            
+            return View(documentoRepository.GetAllDocs().Where(x=>x.NomeDocumento != "").ToList());
         }
 
         [AuthorizeAD(Groups = "G_FACULDADE_COORDENADOR_R, G_FACULDADE_COORDENADOR_RW, G_FACULDADE_SECRETARIA_R, G_FACULDADE_SECRETARIA_RW")]
@@ -73,10 +74,10 @@ namespace ControleDocumentos.Controllers
             if (user.Permissao == EnumPermissaoUsuario.coordenador)
             {
                 List<Documento> retorno = documentoRepository.GetDocsByCoordenador(user.IdUsuario);
-                return PartialView("_List", retorno);
+                return PartialView("_List", retorno.Where(x => x.NomeDocumento != ""));
             }
             // helenira: replicar validação da view
-            return PartialView("_List", documentoRepository.GetAllDocs());
+            return PartialView("_List", documentoRepository.GetAllDocs().Where(x => x.NomeDocumento != ""));
 
         }
 
@@ -224,8 +225,9 @@ namespace ControleDocumentos.Controllers
                     return Json(new { Status = false, Type = "error", Message = "Não autorizado!" }, JsonRequestBehavior.AllowGet);
             }
 
-            if (documentoRepository.DeletaArquivo(doc))
+            if (documentoRepository.DeletaArquivo(doc,true))
             {
+                
                 Utilidades.SalvaLog(user, EnumAcao.Excluir, doc, (int?)doc.IdDocumento);
                 return Json(new { Status = true, Type = "success", Message = "Documento deletado com sucesso!", ReturnUrl = Url.Action("Index") }, JsonRequestBehavior.AllowGet);
             }
