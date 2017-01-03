@@ -22,7 +22,7 @@
                 <td>@(ev.Vagas - ev.VagasPreenchidas)</td>
                 <td>@(ControleDocumentos.Util.Extension.EnumExtensions.GetEnumDescription(ev.Status))</td>
                 <td class="center">
-                    @if (user.Permissao == ControleDocumentosLibrary.EnumPermissaoUsuario.aluno || user.Permissao == ControleDocumentosLibrary.EnumPermissaoUsuario.professor)
+                    @if (user.Permissao == ControleDocumentosLibrary.EnumPermissaoUsuario.aluno)
                     {
                         <a class="btnCadastro" data-rel="tooltip" title="Visualizar" href="#" url="@Url.Action("CadastrarEvento", "Evento", new { idEvento = ev.IdEvento })">
                             <i class="icon-action fa fa-eye"></i>
@@ -56,10 +56,12 @@
                         }
                     }
                     else {
-                        <a class="btnCadastro" data-rel="tooltip" title="@(ev.Status == ControleDocumentosLibrary.EnumStatusEvento.cancelado || ev.Status == ControleDocumentosLibrary.EnumStatusEvento.concluido || ev.Status == ControleDocumentosLibrary.EnumStatusEvento.certificados ? "Visualizar" : "Editar")" href="#" url="@Url.Action("CadastrarEvento", "Evento", new { idEvento = ev.IdEvento })">
-                            <i class="icon-action @(ev.Status == ControleDocumentosLibrary.EnumStatusEvento.cancelado || ev.Status == ControleDocumentosLibrary.EnumStatusEvento.concluido || ev.Status == ControleDocumentosLibrary.EnumStatusEvento.certificados ? "fa fa-eye" : "fa fa-edit")"></i>
-                        </a>
-
+                        if (user.Permissao != ControleDocumentosLibrary.EnumPermissaoUsuario.professor)
+                        {
+                            <a class="btnCadastro" data-rel="tooltip" title="@(ev.Status == ControleDocumentosLibrary.EnumStatusEvento.cancelado || ev.Status == ControleDocumentosLibrary.EnumStatusEvento.concluido || ev.Status == ControleDocumentosLibrary.EnumStatusEvento.certificados ? "Visualizar" : "Editar")" href="#" url="@Url.Action("CadastrarEvento", "Evento", new { idEvento = ev.IdEvento })">
+                                <i class="icon-action @(ev.Status == ControleDocumentosLibrary.EnumStatusEvento.cancelado || ev.Status == ControleDocumentosLibrary.EnumStatusEvento.concluido || ev.Status == ControleDocumentosLibrary.EnumStatusEvento.certificados ? "fa fa-eye" : "fa fa-edit")"></i>
+                            </a>
+                        }
                         if (user.Permissao != ControleDocumentosLibrary.EnumPermissaoUsuario.secretaria &&
                             ev.Status != ControleDocumentosLibrary.EnumStatusEvento.cancelado && ev.Status != ControleDocumentosLibrary.EnumStatusEvento.certificados)
                         {
